@@ -3,12 +3,22 @@
 {% block title %}Création administrateur - ResaTable{% endblock %}
 
 {% block body %}
-<h1>Création de l'administrateur</h1>
 
-{{ form_start(form) }}
-    {{ form_widget(form) }}
+    <main class="form-signin w-100 m-auto"> 
+    {{ form_start(form) }}
+        <h1 class="mb-3">Création de l'administrateur</h1>
+        <div class="form-floating mb-3">
+            {{ form_widget(form.email) }}
+            {{ form_label(form.email) }}
+        </div>
 
-    <button class="btn btn-primary">
-        Création
-    </button>
-{{ form_end(form) }}{% endblock %}
+        <div class="form-floating mb-3">
+            {{ form_widget(form.password) }}
+        </div>
+
+        <button class="btn btn-primary">
+            Création
+        </button>
+    {{ form_end(form) }}
+    </main>
+{% endblock %}
