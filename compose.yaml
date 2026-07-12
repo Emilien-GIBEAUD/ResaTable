@@ -1,6 +1,11 @@
 ---
+# Development environment. 
 services:
   php:
+    image: ${IMAGES_PREFIX:-}resa_table_dev
+    build:
+      context: .
+      target: frankenphp_dev
     restart: unless-stopped
     environment:
       SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
@@ -13,9 +18,27 @@ services:
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
       MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-443}/.well-known/mercure}
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      MERCURE_EXTRA_DIRECTIVES: demo
+      # See https://xdebug.org/docs/all_settings#mode
+      FRANKENPHP_WORKER_CONFIG: watch
+      FRANKENPHP_SITE_CONFIG: hot_reload
+      XDEBUG_MODE: "${XDEBUG_MODE:-develop}"
+      APP_ENV: "${APP_ENV:-dev}"
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - ./:/app
+      - ./frankenphp/Caddyfile:/etc/frankenphp/Caddyfile:ro
+      - ./frankenphp/conf.d/20-app.dev.ini:/usr/local/etc/php/app.conf.d/20-app.dev.ini:ro
+      # Keep var/ off the bind-mount for faster I/O on Mac/Windows; comment to inspect from the host.
+      - /app/var
+      # If you develop on Mac or Windows you can remove the vendor/ directory
+      #  from the bind-mount for better performance by enabling the next line:
+      #- /app/vendor
+    extra_hosts:
+      # Ensure that host.docker.internal is correctly defined on Linux
+      - host.docker.internal:host-gateway
+    tty: true
     ports:
       - name: http
         target: 80
@@ -52,6 +75,8 @@ services:
       - database_data:/var/lib/mysql:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
+    ports:
+      - "3306"
 ###< doctrine/doctrine-bundle ###
 
   phpmyadmin:

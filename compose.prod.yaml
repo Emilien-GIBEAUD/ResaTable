@@ -1,12 +1,39 @@
----
-# Production environment override
+# 1. Copy this file to the prod folder (and rename it in compose.yaml)
+# 2. Run the container with : sudo docker compose up -d
 services:
   php:
-    image: ${IMAGES_PREFIX:-}resa_table
-    build:
-      context: .
-      target: frankenphp_prod
+    image: emiliengibeaud/resa_table:latest
+    container_name: resa_table
+    restart: unless-stopped
     environment:
-      APP_SECRET: ${APP_SECRET}
-      MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
-      MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+      APP_ENV: prod
+      SERVER_NAME: rt.emilien-gibeaud.tech
+      # Doctrine ORM → MariaDB
+      DATABASE_URL: ${DATABASE_URL}
+
+    networks:
+      - edge_edge
+      - resa_table_internal
+
+  database:
+    image: mariadb:${MARIADB_VERSION}
+    container_name: resa_table_db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "true"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - resa_table_internal
+
+networks:
+  edge_edge:
+    external: true
+  resa_table_internal:
+    external: true
+
+volumes:
+  mariadb_data:
