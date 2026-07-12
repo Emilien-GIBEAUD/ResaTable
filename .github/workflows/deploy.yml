@@ -32,7 +32,8 @@ jobs:
         target: frankenphp_prod
         push: true
         tags: emiliengibeaud/resa_table:latest
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/arm64
+        # platforms: linux/amd64,linux/arm64
 
   deploy:
     needs: build

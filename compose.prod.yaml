@@ -27,7 +27,7 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
-      - resa_table_internal
+      # - resa_table_internal
 
 networks:
   edge_edge:
