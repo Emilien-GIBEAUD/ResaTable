@@ -25,13 +25,19 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
+    - name: Read version
+      id: version
+      run: echo "VERSION=$(grep -m1 '^## ' CHANGELOG.md | sed 's/^## //')" >> $GITHUB_OUTPUT
+
     - name: Build and Push
       uses: docker/build-push-action@v6
       with:
         context: .
         target: frankenphp_prod
         push: true
-        tags: emiliengibeaud/resa_table:latest
+        tags: |
+          emiliengibeaud/resa_table:latest
+          emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}
         platforms: linux/arm64
         # platforms: linux/amd64,linux/arm64
 
