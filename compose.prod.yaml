@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     environment:
       APP_ENV: prod
+      APP_SECRET: ${APP_SECRET}
       SERVER_NAME: rt.emilien-gibeaud.tech
       # Doctrine ORM → MariaDB
       DATABASE_URL: ${DATABASE_URL}
@@ -27,13 +28,14 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
-      # - resa_table_internal
+      - resa_table_internal
 
 networks:
   edge_edge:
     external: true
   resa_table_internal:
-    external: true
+    name: resa_table_internal     # Create the network if it doesn't exist yet
+    # external: true              # Create the network with "docker network create resa_table_internal"
 
 volumes:
   mariadb_data:

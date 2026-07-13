@@ -21,4 +21,4 @@ networks:
 
   # Réseau interne DB de ResaTable
   resa_table_internal:
-    external: true
+    external: true              # Created by the ResaTable compose.prod.yaml file

@@ -35,6 +35,9 @@ jobs:
         platforms: linux/arm64
         # platforms: linux/amd64,linux/arm64
 
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
