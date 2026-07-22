@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Security\PasswordPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -10,6 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommand(
     name: 'app:create-admin',
@@ -19,7 +21,8 @@ class CreateAdminCommand extends Command
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private ValidatorInterface $validator,
     )
     {
         parent::__construct();
@@ -41,8 +44,8 @@ class CreateAdminCommand extends Command
         }
 
         $email = $io->ask('Adresse e-mail :');
-        $password = $io->askHidden('Mot de passe');
-        $passwordConfirmation = $io->askHidden('Confirmation du mot de passe');
+        $password = $io->askHidden('Mot de passe (copier/coller désactivé)');
+        $passwordConfirmation = $io->askHidden('Confirmation du mot de passe (copier/coller désactivé)');
 
         if($email===null || $password===null || $passwordConfirmation===null){
             $io->error('Tous les champs sont obligatoires.');
@@ -51,6 +54,15 @@ class CreateAdminCommand extends Command
 
         if ($password !== $passwordConfirmation) {
             $io->error('Les mots de passe ne correspondent pas.');
+            return Command::FAILURE;
+        }
+
+        $violations = $this->validator->validate($password, PasswordPolicy::constraints());
+        if (count($violations) > 0) {
+            foreach ($violations as $violation) {
+                $io->error($violation->getMessage());
+            }
+
             return Command::FAILURE;
         }
 

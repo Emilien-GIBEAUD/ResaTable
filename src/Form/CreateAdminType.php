@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Security\PasswordPolicy;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -26,14 +27,18 @@ class CreateAdminType extends AbstractType
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
                 'first_options' => [
                     'label' => 'Mot de passe',
+                    'constraints' => PasswordPolicy::constraints(),
                     'attr' => [
                         'class' => 'form-control mb-1',
+                        'autocomplete' => 'new-password',
+                        'minlength' => 12,
                     ],
                 ],
                 'second_options' => [
                     'label' => 'Confirmer le mot de passe',
                     'attr' => [
                         'class' => 'form-control',
+                        'autocomplete' => 'new-password',
                     ],
                 ],
             ])

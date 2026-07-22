@@ -19,81 +19,107 @@
         {% endif %}
     </head>
 
-    <body class="align-items-center py-4 bg-body-tertiary">
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom --bs-tertiary-color">
-            <div class="col-md-3 mb-2 mb-md-0"> 
-                <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                    <i class="bi bi-bootstrap" width="40" height="32" role="img" aria-label="Bootstrap">
+    <body class="align-items-center py-1 bg-body-tertiary">
+        <div class="d-flex flex-column min-vh-100">
+            <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 border-bottom --bs-tertiary-color">
+                <div class="col-sm-1 mb-2 mb-sm-0 text-center"> 
+                    <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+                        <i class="bi bi-bootstrap" width="40" height="32" role="img" aria-label="Bootstrap">
+                        </i> 
+                    </a>
+                </div>
+                <nav class="navbar navbar-expand-sm col-sm-11" aria-label="Fourth navbar example">
+                    <div class="container-fluid ms-5 ms-sm-0"> 
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation"> 
+                            <span class="navbar-toggler-icon"></span> 
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarsExample04">
+                            <ul class="navbar-nav me-auto mb-4 mb-sm-0">
+                                <li class="nav-item"> 
+                                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}" aria-current="page" href="/">Accueil</a> 
+                                </li>
+                                <li class="nav-item"> 
+                                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_table' ? 'active' : '' }}" aria-current="page" href="/table">Table</a> 
+                                </li>
+                                <li class="nav-item"> 
+                                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_pizzas' ? 'active' : '' }}" href="/pizzas">Pizzas</a> 
+                                </li>
+                                <li class="nav-item"> 
+                                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_conditions' ? 'active' : '' }}" href="/conditions">Conditions</a> 
+                                </li>
+                            </ul>
+
+                            <div class="col-sm-6 text-sm-end px-2"> 
+                                {% if app.user %}
+                                        <p class="mb-0">{{ app.user.userIdentifier }} connecté</p>
+                                        <a class="mb-0" href="{{ logout_path() }}">se déconnecter</a>
+                                {% else %}
+                                <a type="button" class="btn btn-outline-primary me-2" href="{{ path('app_login') }}">Login</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="dropdown position-fixed bottom-0 end-0 mb-5 me-3 bd-mode-toggle">
+                <button class="btn btn-primary btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
+                    aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (light)"> 
+                    <i class="bi bi-sun-fill my-1 theme-icon-active">
+                        {# <use href="#sun-fill"></use> #}
                     </i> 
-                </a>
+                    <span class="visually-hidden" id="bd-theme-text">Toggle theme</span> 
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+                    <li> 
+                        <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light"
+                            aria-pressed="true"> 
+                            <i class="bi bi-sun-fill me-2">
+                                {# <use href="#sun-fill"></use> #}
+                            </i>
+                            Light
+                            <i class="bi bi-check2 ms-auto d-none">
+                                {# <use href="#check2"></use> #}
+                            </i> 
+                        </button> </li>
+                    <li> 
+                        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
+                            aria-pressed="false"> 
+                            <i class="bi bi-moon-stars-fill me-2">
+                                {# <use href="#moon-stars-fill"></use> #}
+                            </i>
+                            Dark
+                            <i class="bi bi-check2 ms-auto d-none">
+                                {# <use href="#check2"></use> #}
+                            </i> 
+                        </button> </li>
+                    <li> <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto"
+                            aria-pressed="false"> 
+                            <i class="bi bi-circle-half me-2">
+                                {# <use href="#circle-half"></use> #}
+                            </i>
+                            Auto
+                            <i class="bi bi-check2 ms-auto d-none">
+                                {# <use href="#check2"></use> #}
+                            </i> 
+                        </button> 
+                    </li>
+                </ul>
             </div>
-            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 link-secondary">Table</a></li>
-                <li><a href="#" class="nav-link px-2">Pizzas</a></li>
-                <li><a href="#" class="nav-link px-2">Conditions</a></li>
-            </ul>
-            <div class="col-md-3 text-end"> 
-                <a type="button" class="btn btn-outline-primary me-2" href="{{ path('app_login') }}">Login</a>
-            </div>
-        </header>
 
-        <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-            <button class="btn btn-primary btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
-                aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (light)"> 
-                <i class="bi bi-sun-fill my-1 theme-icon-active">
-                    {# <use href="#sun-fill"></use> #}
-                </i> 
-                <span class="visually-hidden" id="bd-theme-text">Toggle theme</span> 
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="">
-                <li> 
-                    <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light"
-                        aria-pressed="true"> 
-                        <i class="bi bi-sun-fill me-2">
-                            {# <use href="#sun-fill"></use> #}
-                        </i>
-                        Light
-                        <i class="bi bi-check2 ms-auto d-none">
-                            {# <use href="#check2"></use> #}
-                        </i> 
-                    </button> </li>
-                <li> 
-                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
-                        aria-pressed="false"> 
-                        <i class="bi bi-moon-stars-fill me-2">
-                            {# <use href="#moon-stars-fill"></use> #}
-                        </i>
-                        Dark
-                        <i class="bi bi-check2 ms-auto d-none">
-                            {# <use href="#check2"></use> #}
-                        </i> 
-                    </button> </li>
-                <li> <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto"
-                        aria-pressed="false"> 
-                        <i class="bi bi-circle-half me-2">
-                            {# <use href="#circle-half"></use> #}
-                        </i>
-                        Auto
-                        <i class="bi bi-check2 ms-auto d-none">
-                            {# <use href="#check2"></use> #}
-                        </i> 
-                    </button> 
-                </li>
-            </ul>
+            {% block body %}{% endblock %}
+
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 border-top">
+                <p class="col-md-4 mb-0 text-body-secondary">© 2026 Restaurant</p> <a href="/"
+                    class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+                    aria-label="Bootstrap"> 
+                    <svg class="bi bi- bootstrap me-2" width="40" height="32" aria-hidden="true">
+                    </svg> </a>
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Le restaurant</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Mentions légales</a></li>
+                </ul>
+            </footer>
         </div>
-
-        {% block body %}{% endblock %}
-
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-            <p class="col-md-4 mb-0 text-body-secondary">© 2026 Restaurant</p> <a href="/"
-                class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
-                aria-label="Bootstrap"> 
-                <svg class="bi bi- bootstrap me-2" width="40" height="32" aria-hidden="true">
-                </svg> </a>
-            <ul class="nav col-md-4 justify-content-end">
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Le restaurant</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Mentions légales</a></li>
-            </ul>
-        </footer>
     </body>
 </html>

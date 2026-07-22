@@ -1,9 +1,9 @@
 # Changelog
 
 ## 0.0.4
-- Mise à jour du header
+- Mise à jour du header avec ajout d'un menu burger
 - Mise à jour du footer
-- ...
+- Ajout de conditions sur la force du mot de passe (depuis l'interface graphique et depuis la CLI)
 
 ## 0.0.3
 - Ajout d'un header avec son menu (non finalisé)

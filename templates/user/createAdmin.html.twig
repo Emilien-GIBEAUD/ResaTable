@@ -12,8 +12,20 @@
             {{ form_label(form.email) }}
         </div>
 
-        <div class="form-floating mb-3">
-            {{ form_widget(form.password) }}
+        <div class="mb-3">
+            {{ form_label(form.password.first) }}
+            {{ form_widget(form.password.first) }}
+            {{ form_errors(form.password.first) }}
+            <div class="form-text">
+                Le mot de passe doit contenir au moins 12 caractères, dont 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.password.second) }}
+            {{ form_widget(form.password.second) }}
+            {{ form_errors(form.password.second) }}
+            {{ form_errors(form.password) }}
         </div>
 
         <button class="btn btn-primary">

@@ -8,18 +8,35 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    {% if app.user %}
-        <div class="mb-3">
-            Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">se déconnecter</a>
-        </div>
-    {% endif %}
-    <h1>Page d'accueil</h1>
+<main class="flex-grow-1 col-10 col-xl-8 mx-auto">
+    <div class="container">
+        <h1 class="my-4">Accueil</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/app/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/app/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+        <p>Bienvenue sur le service de réservation de notre restaurant.</p>
+        <p>Accèdez à nos services depuis le menu en haut de page ou bien en utilisant les liens ci-dessous :</p>
+        <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
+            <div class="col d-flex align-items-start mb-2 px-2">
+                <div>
+                    <h2 class="fs-2 text-body-emphasis">Réserver une table</h2>
+                    <p>Vous pouvez réserver une table pour le midi ou le soir sur nos jours d'ouverture (service non disponible le jour de votre venue).</p>
+                    <a href="/table" class="btn btn-primary">Réserver une table</a>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start mb-2 px-2">
+                <div>
+                    <h2 class="fs-2 text-body-emphasis">Réserver une pizza</h2>
+                    <p>Vous pouvez réserver une pizza le dimanche soir (service non disponible le dimanche).</p>
+                    <a href="/pizzas" class="btn btn-primary">Réserver une pizza</a>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start mb-2 px-2">
+                <div>
+                    <h2 class="fs-2 text-body-emphasis">Voir les conditions d'utilisation</h2>
+                    <p>Pour voir nos conditions d'utilisation et comment se déroulent les réservations.</p>
+                    <a href="/conditions" class="btn btn-primary">Nos conditions d'utilisation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}
