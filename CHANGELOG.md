@@ -3,6 +3,7 @@
 ## 0.0.4
 - Mise à jour du header
 - Mise à jour du footer
+- ...
 
 ## 0.0.3
 - Ajout d'un header avec son menu (non finalisé)
