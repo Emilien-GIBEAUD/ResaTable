@@ -1,9 +1,6 @@
 @import '../vendor/bootstrap/dist/css/bootstrap.min.css';
 @import '../vendor/bootstrap-icons/font/bootstrap-icons.css';
 
-body {
-    background-color: skyblue;
-}
 
 .form-signin {
     max-width: 330px;
