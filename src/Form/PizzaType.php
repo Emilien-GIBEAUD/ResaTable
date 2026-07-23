@@ -28,6 +28,7 @@ class PizzaType extends AbstractType
             ])
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Visible',
+                'required' => false,
             ])
         ;
     }

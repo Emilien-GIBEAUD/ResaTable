@@ -1,6 +1,9 @@
 # Changelog
 
 ## 0.0.8
+- Correction d'un bug sur le checkbox "visible" qui ne pouvait être décoché (Ajout/modification des pizzas)
+
+## 0.0.8
 - Ajout/modification/suppression des pizzas (admin connecté uniquement)
 - Vue de la liste des pizzas
 - Pas de styles Bootstrap dans cette version
