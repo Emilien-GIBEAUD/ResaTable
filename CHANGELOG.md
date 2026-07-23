@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+- Fonctionnalité service
+--- Ajout d'un lien provisoire vers la fonctionnalité (/service/template) depuis /pizzas
+
 ## 0.1.0
 - Début de l'ajout de la fonctionnalité service (admin connecté uniquement) --- Info ---> Les services sont créés à l'aide d'exemples de service
 
