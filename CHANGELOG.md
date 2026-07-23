@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.5
+- Mise à jour du déploiement automatique
+
 ## 0.0.4
 - Mise à jour du header avec ajout d'un menu burger
 - Mise à jour du footer
