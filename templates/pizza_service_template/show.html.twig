@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exemple service pizzas{% endblock %}
+
+{% block body %}
+    <h1>Exemple de service pour les pizzas</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ pizza_service_template.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ pizza_service_template.name }}</td>
+            </tr>
+            <tr>
+                <th>Début service</th>
+                <td>{{ pizza_service_template.startTime ? pizza_service_template.startTime|date('H:i') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fin service</th>
+                <td>{{ pizza_service_template.endTime ? pizza_service_template.endTime|date('H:i') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Durée créneau (min.)</th>
+                <td>{{ pizza_service_template.slotDurationInMin }}</td>
+            </tr>
+            <tr>
+                <th>Capacité créneau</th>
+                <td>{{ pizza_service_template.capacityPerSlot }}</td>
+            </tr>
+            <tr>
+                <th>Visible</th>
+                <td>{{ pizza_service_template.isActive ? 'oui' : 'non' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_pizza_service_template_index') }}">retour à la liste des exemples</a>
+
+    <a href="{{ path('app_pizza_service_template_edit', {'id': pizza_service_template.id}) }}">modifier</a>
+
+    {{ include('pizza_service_template/_delete_form.html.twig') }}
+{% endblock %}

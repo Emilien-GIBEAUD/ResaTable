@@ -1,12 +1,14 @@
 # Changelog
 
 ## 0.1.0
-- Début de l'ajout de la fonctionnalité service
---- CRUD des template de service (admin connecté uniquement)
-- Pas de styles Bootstrap dans cette version
-- 
---- Brouillon ---
---- Les services sont créés à l'aide de template de service
+- Début de l'ajout de la fonctionnalité service (admin connecté uniquement) --- Info ---> Les services sont créés à l'aide d'exemples de service
+
+--- Fait ---
+- CRUD des exemples de service
+
+--- Reste à faire --- (non exhaustif)
+- CRUD des service
+- Styles Bootstrap
 
 ## 0.0.8
 - Correction d'un bug sur le checkbox "visible" qui ne pouvait être décoché (Ajout/modification des pizzas)

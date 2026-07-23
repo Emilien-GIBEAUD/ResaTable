@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier exemple service pizzas{% endblock %}
+
+{% block body %}
+    <h1>Modifier un exemple de service pour les pizzas</h1>
+
+    {{ include('pizza_service_template/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+    <a href="{{ path('app_pizza_service_template_index') }}">retour à la liste des exemples</a>
+
+    {{ include('pizza_service_template/_delete_form.html.twig') }}
+{% endblock %}

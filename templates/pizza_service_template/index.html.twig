@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exemple service pizzas{% endblock %}
+
+{% block body %}
+    <h1>Exemple de service pour les pizzas</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Début service</th>
+                <th>Fin service</th>
+                <th>Durée créneau (min.)</th>
+                <th>Capacité créneau</th>
+                <th>Visible</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pizza_service_template in pizza_service_templates %}
+            <tr>
+                <td>{{ pizza_service_template.id }}</td>
+                <td>{{ pizza_service_template.name }}</td>
+                <td>{{ pizza_service_template.startTime ? pizza_service_template.startTime|date('H:i') : '' }}</td>
+                <td>{{ pizza_service_template.endTime ? pizza_service_template.endTime|date('H:i') : '' }}</td>
+                <td>{{ pizza_service_template.slotDurationInMin }}</td>
+                <td>{{ pizza_service_template.capacityPerSlot }}</td>
+                <td>{{ pizza_service_template.isActive ? 'oui' : 'non' }}</td>
+                <td>
+                    <a href="{{ path('app_pizza_service_template_show', {'id': pizza_service_template.id}) }}">voir</a>
+                    <a href="{{ path('app_pizza_service_template_edit', {'id': pizza_service_template.id}) }}">modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">Pas d'exemples de services disponibles</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_pizza_service_template_new') }}">Créer un exemple de service</a>
+    <p class="alert alert-danger">Pensez à gérer la visibilité des exemples de service.</p>
+{% endblock %}
