@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.7
+- Mise à jour du message renvoyé en cas de mot de passe erroné
+
 ## 0.0.6
 - Correction d'affichage de la police pour les mobiles
 
