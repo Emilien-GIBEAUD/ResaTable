@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pizza{% endblock %}
+
+{% block body %}
+    <h1>Pizza</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ pizza.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ pizza.name }}</td>
+            </tr>
+            <tr>
+                <th>Ingrédients</th>
+                <td>{{ pizza.ingredients }}</td>
+            </tr>
+            <tr>
+                <th>Prix (€)</th>
+                <td>{{ pizza.price }}</td>
+            </tr>
+            <tr>
+                <th>Visible</th>
+                <td>{{ pizza.isActive ? 'Oui' : 'Non' }}</td>
+            </tr>
+            <tr>
+                <th>Créé le</th>
+                <td>{{ pizza.createdAt ? pizza.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Mis à jour le</th>
+                <td>{{ pizza.updatedAt ? pizza.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_pizza_edit', {'id': pizza.id}) }}">modifier</a>
+
+    <a href="{{ path('app_pizza_index') }}">retour à la liste des pizzas</a>
+
+    {{ include('pizza/_delete_form.html.twig') }}
+{% endblock %}

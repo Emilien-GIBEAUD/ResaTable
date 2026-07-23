@@ -52,10 +52,10 @@
 
                             <div class="col-sm-6 text-sm-end px-2"> 
                                 {% if app.user %}
-                                        <p class="mb-0">{{ app.user.userIdentifier }} connecté</p>
-                                        <a class="mb-0" href="{{ logout_path() }}">se déconnecter</a>
+                                    <p class="mb-0">{{ app.user.userIdentifier }} connecté</p>
+                                    <a class="mb-0" href="{{ logout_path() }}">se déconnecter</a>
                                 {% else %}
-                                <a type="button" class="btn btn-outline-primary me-2" href="{{ path('app_login') }}">Login</a>
+                                    <a type="button" class="btn btn-outline-primary me-2" href="{{ path('app_login') }}">Login</a>
                                 {% endif %}
                             </div>
                         </div>

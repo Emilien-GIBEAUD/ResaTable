@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Pizzas{% endblock %}
+
+{% block body %}
+    <h1>Nos Pizzas</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                {% if app.user %}
+                    <th>Id</th>
+                {% endif %}
+                <th>Nom</th>
+                <th>Ingrédients</th>
+                <th>Prix (€)</th>
+                {% if app.user %}
+                    <th>Visible</th>
+                    <th>Créé le</th>
+                    <th>Mis à jour le</th>
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for pizza in pizzas %}
+            <tr>
+                {% if app.user %}
+                    <td>{{ pizza.id }}</td>
+                {% endif %}
+                <td>{{ pizza.name }}</td>
+                <td>{{ pizza.ingredients }}</td>
+                <td>{{ pizza.price }}</td>
+                {% if app.user %}
+                    <td>{{ pizza.isActive ? 'oui' : 'non' }}</td>
+                    <td>{{ pizza.createdAt ? pizza.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ pizza.updatedAt ? pizza.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_pizza_show', {'id': pizza.id}) }}">voir</a>
+                        <a href="{{ path('app_pizza_edit', {'id': pizza.id}) }}">modifier</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                {% if app.user %}
+                    <td colspan="8">Pas de pizzas disponibles</td>
+                {% else %}
+                    <td colspan="3">Pas de pizzas disponibles</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if app.user %}
+        <a href="{{ path('app_pizza_new') }}">Créer une pizza</a>
+    {% endif %}
+    <p class="alert alert-danger">Pensez à gérer la visibilité des pizzas.</p>
+
+{% endblock %}
+

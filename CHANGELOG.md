@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.8
+- Ajout/modification/suppression des pizzas (admin connecté uniquement)
+- Vue de la liste des pizzas
+- Pas de styles Bootstrap dans cette version
+
 ## 0.0.7
 - Mise à jour du message renvoyé en cas de mot de passe erroné
 
