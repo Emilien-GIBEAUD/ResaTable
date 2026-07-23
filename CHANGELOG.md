@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.6
+- Correction d'affichage de la police pour les mobiles
+
 ## 0.0.5
 - Mise à jour du déploiement automatique
 
