@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter service{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un service</h1>
+
+    {{ include('pizza_service/_form.html.twig') }}
+
+    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+{% endblock %}

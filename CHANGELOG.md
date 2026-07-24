@@ -1,18 +1,34 @@
 # Changelog
 
+## 0.1.2
+- Fonctionnalité service de pizzas ( _**branch service**_ )
+    - **Fait** _(dans cette version)_  
+        - CRUD des services
+    
+    - _Reste à faire (non exhaustif)_ 
+        - _Déplacer l'accès à la fonctionnalité dans un sous-menu de la navbar_
+        - _Styles Bootstrap_
+
+- Fonctionnalité pizzas ( _**branch pizza**_ )
+    - Gestion de la visibilité des pizzas ( _en cours_ )
+    - Ajout de filtres ( _en cours_ )
+
 ## 0.1.1
-- Fonctionnalité service
---- Ajout d'un lien provisoire vers la fonctionnalité (/service/template) depuis /pizzas
+- Fonctionnalité service de pizzas  
+_Ajout d'un lien provisoire vers la fonctionnalité (/service/template) depuis /pizzas_
 
 ## 0.1.0
-- Début de l'ajout de la fonctionnalité service (admin connecté uniquement) --- Info ---> Les services sont créés à l'aide d'exemples de service
+- Début de l'ajout de la fonctionnalité service de pizzas (admin connecté uniquement) 
+    - **Fait** _(dans cette version)_   
+        - CRUD des modèles de service
+    
+    - _Reste à faire (non exhaustif)_  
+        - _CRUD des services_  
+        - _Styles Bootstrap_
 
---- Fait ---
-- CRUD des exemples de service
+> 🚀 --- **INFO** --- 🚀  
+Les services sont créés à l'aide de modèles de service
 
---- Reste à faire --- (non exhaustif)
-- CRUD des service
-- Styles Bootstrap
 
 ## 0.0.8
 - Correction d'un bug sur le checkbox "visible" qui ne pouvait être décoché (Ajout/modification des pizzas)
@@ -20,8 +36,10 @@
 ## 0.0.8
 - Ajout/modification/suppression des pizzas (admin connecté uniquement)
 - Vue de la liste des pizzas
-- Pas de styles Bootstrap dans cette version
-... erreur de versionning, version non disponnible sur DockerHub, écrasée par la correction suivante qui aurai due être en version 0.0.9 ...
+- Pas de styles Bootstrap dans cette version  
+
+_erreur de versionning :_  
+version non disponnible sur DockerHub, écrasée par la correction suivante qui aurai due être en version 0.0.9 ...
 
 ## 0.0.7
 - Mise à jour du message renvoyé en cas de mot de passe erroné

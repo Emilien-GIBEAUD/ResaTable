@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier service{% endblock %}
+
+{% block body %}
+    <h1>Modifier un service</h1>
+
+    {{ include('pizza_service/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+
+    {{ include('pizza_service/_delete_form.html.twig') }}
+{% endblock %}

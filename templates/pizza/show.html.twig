@@ -8,10 +8,6 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ pizza.id }}</td>
-            </tr>
-            <tr>
                 <th>Nom</th>
                 <td>{{ pizza.name }}</td>
             </tr>
@@ -29,11 +25,11 @@
             </tr>
             <tr>
                 <th>Créé le</th>
-                <td>{{ pizza.createdAt ? pizza.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ pizza.createdAt|date('Y-m-d') }}</td>
             </tr>
             <tr>
                 <th>Mis à jour le</th>
-                <td>{{ pizza.updatedAt ? pizza.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ pizza.updatedAt|date('Y-m-d') }}</td>
             </tr>
         </tbody>
     </table>

@@ -8,9 +8,6 @@
     <table class="table">
         <thead>
             <tr>
-                {% if app.user %}
-                    <th>Id</th>
-                {% endif %}
                 <th>Nom</th>
                 <th>Ingrédients</th>
                 <th>Prix (€)</th>
@@ -25,16 +22,13 @@
         <tbody>
         {% for pizza in pizzas %}
             <tr>
-                {% if app.user %}
-                    <td>{{ pizza.id }}</td>
-                {% endif %}
                 <td>{{ pizza.name }}</td>
                 <td>{{ pizza.ingredients }}</td>
                 <td>{{ pizza.price }}</td>
                 {% if app.user %}
                     <td>{{ pizza.isActive ? 'oui' : 'non' }}</td>
-                    <td>{{ pizza.createdAt ? pizza.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ pizza.updatedAt ? pizza.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ pizza.createdAt|date('Y-m-d') }}</td>
+                    <td>{{ pizza.updatedAt|date('Y-m-d') }}</td>
                     <td>
                         <a href="{{ path('app_pizza_show', {'id': pizza.id}) }}">voir</a>
                         <a href="{{ path('app_pizza_edit', {'id': pizza.id}) }}">modifier</a>
@@ -44,7 +38,7 @@
         {% else %}
             <tr>
                 {% if app.user %}
-                    <td colspan="8">Pas de pizzas disponibles</td>
+                    <td colspan="7">Pas de pizzas disponibles</td>
                 {% else %}
                     <td colspan="3">Pas de pizzas disponibles</td>
                 {% endif %}
@@ -55,7 +49,8 @@
 
     {% if app.user %}
         <a href="{{ path('app_pizza_new') }}">Créer une pizza</a>
-        <a href="{{ path('app_pizza_service_template_index') }}">Créer un exemple de service</a>
+        <a href="{{ path('app_pizza_service_index') }}">Créer un service</a>
+        <a href="{{ path('app_pizza_service_template_index') }}">Créer un modèle de service</a>
     {% endif %}
     <p class="alert alert-danger">Pensez à gérer la visibilité des pizzas.</p>
 

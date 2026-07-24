@@ -47,7 +47,7 @@ final class PizzaController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/{id}', name: 'app_pizza_show', methods: ['GET'])]
+    #[Route('/{id}', requirements: ['id' => '\d+'], name: 'app_pizza_show', methods: ['GET'])]
     public function show(Pizza $pizza): Response
     {
         return $this->render('pizza/show.html.twig', [

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Service de Pizza{% endblock %}
+
+{% block body %}
+    <h1>Service de Pizza</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Date de service</th>
+                <td>{{ pizza_service.serviceDate|date('Y-m-d') }}</td>
+            </tr>
+            <tr>
+                <th>Début service</th>
+                <td>{{ pizza_service.template.startTime|date('H:i') }}</td>
+            </tr>
+            <tr>
+                <th>Fin service</th>
+                <td>{{ pizza_service.template.endTime|date('H:i') }}</td>
+            </tr>
+            <tr>
+                <th>Durée créneau (min.)</th>
+                <td>{{ pizza_service.template.slotDurationInMin }}</td>
+            </tr>
+            <tr>
+                <th>Capacité créneau</th>
+                <td>{{ pizza_service.template.capacityPerSlot }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_pizza_service_edit', {'id': pizza_service.id}) }}">modifier</a>
+
+    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+
+    {{ include('pizza_service/_delete_form.html.twig') }}
+{% endblock %}
