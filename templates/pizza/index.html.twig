@@ -8,13 +8,57 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Nom</th>
+                <th>Nom
+                    {% if app.user %}
+                        <a class="link-body-emphasis text-decoration-none" href="{{ path('app_pizza_index', app.request.query.all|merge({
+                            sort: 'name',
+                            direction: 'ASC'
+                        })) }}">
+                            <i class="bi bi-caret-down-square" width="32" height="32" role="img" aria-label="Bootstrap"></i>
+                        </a>
+                        <span> </span>
+                        <a class="link-body-emphasis text-decoration-none" href="{{ path('app_pizza_index', app.request.query.all|merge({
+                            sort: 'name',
+                            direction: 'DESC'
+                        })) }}">
+                            <i class="bi bi-caret-up-square" width="32" height="32" role="img" aria-label="Bootstrap"></i>
+                        </a>
+                    {% endif %}
+                </th>
                 <th>Ingrédients</th>
-                <th>Prix (€)</th>
+                <th>Prix (€)
+                    {% if app.user %}
+                        <a class="link-body-emphasis text-decoration-none" href="{{ path('app_pizza_index', app.request.query.all|merge({
+                            sort: 'price',
+                            direction: 'ASC'
+                        })) }}">
+                            <i class="bi bi-caret-down-square" width="32" height="32" role="img" aria-label="Bootstrap"></i>
+                        </a>
+                        <span> </span>
+                        <a class="link-body-emphasis text-decoration-none" href="{{ path('app_pizza_index', app.request.query.all|merge({
+                            sort: 'price',
+                            direction: 'DESC'
+                        })) }}">
+                            <i class="bi bi-caret-up-square" width="32" height="32" role="img" aria-label="Bootstrap"></i>
+                        </a>
+                    {% endif %}
+                </th>
                 {% if app.user %}
-                    <th>Visible</th>
-                    <th>Créé le</th>
-                    <th>Mis à jour le</th>
+                    <th>Visible
+                        <a class="link-body-emphasis text-decoration-none" href="{{ path('app_pizza_index', app.request.query.all|merge({
+                            sort: 'name',
+                            direction: 'ASC'
+                        })) }}">
+                            <i class="bi bi-caret-down-square" width="32" height="32" role="img" aria-label="Bootstrap"></i>
+                        </a>
+                        <span> </span>
+                        <a class="link-body-emphasis text-decoration-none" href="{{ path('app_pizza_index', app.request.query.all|merge({
+                            sort: 'name',
+                            direction: 'DESC'
+                        })) }}">
+                            <i class="bi bi-caret-up-square" width="32" height="32" role="img" aria-label="Bootstrap"></i>
+                        </a>
+                    </th>
                     <th>Actions</th>
                 {% endif %}
             </tr>
@@ -27,8 +71,6 @@
                 <td>{{ pizza.price }}</td>
                 {% if app.user %}
                     <td>{{ pizza.isActive ? 'oui' : 'non' }}</td>
-                    <td>{{ pizza.createdAt|date('Y-m-d') }}</td>
-                    <td>{{ pizza.updatedAt|date('Y-m-d') }}</td>
                     <td>
                         <a href="{{ path('app_pizza_show', {'id': pizza.id}) }}">voir</a>
                         <a href="{{ path('app_pizza_edit', {'id': pizza.id}) }}">modifier</a>
@@ -38,7 +80,7 @@
         {% else %}
             <tr>
                 {% if app.user %}
-                    <td colspan="7">Pas de pizzas disponibles</td>
+                    <td colspan="5">Pas de pizzas disponibles</td>
                 {% else %}
                     <td colspan="3">Pas de pizzas disponibles</td>
                 {% endif %}
@@ -48,11 +90,23 @@
     </table>
 
     {% if app.user %}
+        <form class="mb-2" method="get" onchange="this.submit()">
+            <div>
+                <label for="showActive" class="required">Visibilité des pizzas</label>
+                <select name="showActive">
+                    <option value="2" {{ app.request.query.get('showActive') == '2' ? 'selected' : '' }}>Toutes</option>
+                    <option value="1" {{ app.request.query.get('showActive') == '1' ? 'selected' : '' }}>Visibles</option>
+                    <option value="0" {{ app.request.query.get('showActive') == '0' ? 'selected' : '' }}>Non visibles</option>
+                </select>
+            </div>
+        </form>
+
         <a href="{{ path('app_pizza_new') }}">Créer une pizza</a>
+
+        <p class="mb-0"><br>↓↓↓ Provisoire ↓↓↓</p>
         <a href="{{ path('app_pizza_service_index') }}">Créer un service</a>
         <a href="{{ path('app_pizza_service_template_index') }}">Créer un modèle de service</a>
     {% endif %}
-    <p class="alert alert-danger">Pensez à gérer la visibilité des pizzas.</p>
 
 {% endblock %}
 

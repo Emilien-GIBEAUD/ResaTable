@@ -16,20 +16,26 @@ class PizzaRepository extends ServiceEntityRepository
         parent::__construct($registry, Pizza::class);
     }
 
-//    /**
-//     * @return Pizza[] Returns an array of Pizza objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+        * @return Pizza[] Returns an array of Pizza objects
+        */
+    public function findByFilters(int $showActive, string $sort, string $direction): array
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        if ($showActive === 0) {
+            $qb->andWhere('p.isActive = :active')
+            ->setParameter('active', false);
+        }
+        if ($showActive === 1) {
+            $qb->andWhere('p.isActive = :active')
+            ->setParameter('active', true);
+        }
+
+        $qb->orderBy('p.' . $sort, $direction);
+
+        return $qb->getQuery()->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Pizza
 //    {

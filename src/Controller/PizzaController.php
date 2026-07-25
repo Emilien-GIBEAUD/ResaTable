@@ -16,10 +16,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class PizzaController extends AbstractController
 {
     #[Route(name: 'app_pizza_index', methods: ['GET'])]
-    public function index(PizzaRepository $pizzaRepository): Response
+    public function index(PizzaRepository $pizzaRepository, Request $request): Response
     {
+        $showActive = (int) $request->query->get('showActive', 2);
+        $sort = $request->query->get('sort', 'id');
+        $direction = $request->query->get('direction', 'asc');
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $showActive = 1;
+            $sort = 'price';
+            $direction = 'asc';
+        }
         return $this->render('pizza/index.html.twig', [
-            'pizzas' => $pizzaRepository->findAll(),
+            'pizzas' => $pizzaRepository->findByFilters($showActive, $sort, $direction),
         ]);
     }
 

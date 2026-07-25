@@ -6,12 +6,13 @@
         - CRUD des services
     
     - _Reste à faire (non exhaustif)_ 
-        - _Déplacer l'accès à la fonctionnalité dans un sous-menu de la navbar_
         - _Styles Bootstrap_
+        - Déplacer l'accès à la fonctionnalité dans un sous-menu de la navbar ( _en cours_ )
 
 - Fonctionnalité pizzas ( _**branch pizza**_ )
-    - Gestion de la visibilité des pizzas ( _en cours_ )
-    - Ajout de filtres ( _en cours_ )
+    - Gestion de la visibilité des pizzas
+    - Ajout de filtres
+
 
 ## 0.1.1
 - Fonctionnalité service de pizzas  
