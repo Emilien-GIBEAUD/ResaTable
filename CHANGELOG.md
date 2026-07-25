@@ -4,10 +4,13 @@
 - Fonctionnalité service de pizzas ( _**branch service**_ )
     - **Fait** _(dans cette version)_  
         - CRUD des services
+        - Accès aux fonctionnalités depuis un sous-menu de la navbar
+        - Ajout de filtres sur les modèles de service (colonne visible uniquement)
+        - Modification de la liste déroulante des modèles de service lors de la saisie d'un service
     
     - _Reste à faire (non exhaustif)_ 
+        - _Permettre d'ordonner les modèles de services (pour simplifier l'utilisation de la liste déroulante des modèles de service lors de la saisie d'un service)_
         - _Styles Bootstrap_
-        - Déplacer l'accès à la fonctionnalité dans un sous-menu de la navbar ( _en cours_ )
 
 - Fonctionnalité pizzas ( _**branch pizza**_ )
     - Gestion de la visibilité des pizzas

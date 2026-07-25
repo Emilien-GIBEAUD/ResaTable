@@ -25,7 +25,7 @@
             <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 border-bottom --bs-tertiary-color">
                 <div class="col-sm-1 mb-2 mb-sm-0 text-center"> 
                     <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                        <i class="bi bi-bootstrap" width="40" height="32" role="img" aria-label="Bootstrap">
+                        <i class="bi bi-bootstrap" width="40" height="40" role="img" aria-label="Bootstrap">
                         </i> 
                     </a>
                 </div>
@@ -42,9 +42,19 @@
                                 <li class="nav-item"> 
                                     <a class="nav-link {{ app.request.attributes.get('_route') == 'app_table_index' ? 'active' : '' }}" aria-current="page" href="/table">Table</a> 
                                 </li>
-                                <li class="nav-item"> 
-                                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_pizza_index' ? 'active' : '' }}" href="/pizzas">Pizzas</a> 
-                                </li>
+                                {% if app.user %}
+                                    <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['app_pizza_index', 'app_pizza_service_index', 'app_pizza_service_template_index'] ? 'active' : '' }}" href="#" data-bs-toggle="dropdown" aria-expanded="false">Sous-menu pizzas</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item {{ app.request.attributes.get('_route') == 'app_pizza_index' ? 'active' : '' }}" href="/pizzas">Pizzas</a></li>
+                                            <li><a class="dropdown-item {{ app.request.attributes.get('_route') == 'app_pizza_service_index' ? 'active' : '' }}" href="/pizzas/service">Services</a></li>
+                                            <li><a class="dropdown-item {{ app.request.attributes.get('_route') == 'app_pizza_service_template_index' ? 'active' : '' }}" href="/pizzas/service/template">Modèles de service</a></li>
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item"> 
+                                        <a class="nav-link {{ app.request.attributes.get('_route') == 'app_pizza_index' ? 'active' : '' }}" href="/pizzas">Pizzas</a> 
+                                    </li>
+                                {% endif %}
                                 <li class="nav-item"> 
                                     <a class="nav-link {{ app.request.attributes.get('_route') == 'app_conditions_index' ? 'active' : '' }}" href="/conditions">Conditions</a> 
                                 </li>

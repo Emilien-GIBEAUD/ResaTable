@@ -16,20 +16,24 @@ class PizzaServiceTemplateRepository extends ServiceEntityRepository
         parent::__construct($registry, PizzaServiceTemplate::class);
     }
 
-    //    /**
-    //     * @return PizzaServiceTemplate[] Returns an array of PizzaServiceTemplate objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+    * @return PizzaServiceTemplate[] Returns an array of PizzaServiceTemplate objects
+    */
+    public function findByActive(int $showActive): array
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        if ($showActive === 0) {
+            $qb->andWhere('p.isActive = :active')
+            ->setParameter('active', false);
+        }
+        if ($showActive === 1) {
+            $qb->andWhere('p.isActive = :active')
+            ->setParameter('active', true);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 
     //    public function findOneBySomeField($value): ?PizzaServiceTemplate
     //    {

@@ -39,6 +39,16 @@
         </tbody>
     </table>
 
+            <form class="mb-2" method="get" onchange="this.submit()">
+            <div>
+                <label for="showActive" class="required">Visibilité des modèles de service</label>
+                <select name="showActive">
+                    <option value="2" {{ app.request.query.get('showActive') == '2' ? 'selected' : '' }}>Tous</option>
+                    <option value="1" {{ app.request.query.get('showActive') == '1' ? 'selected' : '' }}>Seulement visibles</option>
+                    <option value="0" {{ app.request.query.get('showActive') == '0' ? 'selected' : '' }}>Seulement non visibles</option>
+                </select>
+            </div>
+        </form>
+
     <a href="{{ path('app_pizza_service_template_new') }}">Créer un modèle de service</a>
-    <p class="alert alert-danger">Pensez à gérer la visibilité des modèles de service.</p>
 {% endblock %}

@@ -17,10 +17,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class PizzaServiceTemplateController extends AbstractController
 {
     #[Route(name: 'app_pizza_service_template_index', methods: ['GET'])]
-    public function index(PizzaServiceTemplateRepository $pizzaServiceTemplateRepository): Response
+    public function index(PizzaServiceTemplateRepository $pizzaServiceTemplateRepository, Request $request): Response
     {
+        $showActive = (int) $request->query->get('showActive', 2);
+
         return $this->render('pizza_service_template/index.html.twig', [
-            'pizza_service_templates' => $pizzaServiceTemplateRepository->findAll(),
+            'pizza_service_templates' => $pizzaServiceTemplateRepository->findByActive($showActive),
         ]);
     }
 

@@ -95,8 +95,8 @@
                 <label for="showActive" class="required">Visibilité des pizzas</label>
                 <select name="showActive">
                     <option value="2" {{ app.request.query.get('showActive') == '2' ? 'selected' : '' }}>Toutes</option>
-                    <option value="1" {{ app.request.query.get('showActive') == '1' ? 'selected' : '' }}>Visibles</option>
-                    <option value="0" {{ app.request.query.get('showActive') == '0' ? 'selected' : '' }}>Non visibles</option>
+                    <option value="1" {{ app.request.query.get('showActive') == '1' ? 'selected' : '' }}>Seulement visibles</option>
+                    <option value="0" {{ app.request.query.get('showActive') == '0' ? 'selected' : '' }}>Seulement non visibles</option>
                 </select>
             </div>
         </form>

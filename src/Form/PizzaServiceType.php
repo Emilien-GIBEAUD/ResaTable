@@ -21,7 +21,19 @@ class PizzaServiceType extends AbstractType
             ->add('template', EntityType::class, [
                 'label' => 'Modèle de service',
                 'class' => PizzaServiceTemplate::class,
-                'choice_label' => 'name',
+                'choice_label' => function (PizzaServiceTemplate $template): string {
+                    $interval = $template->getStartTime()->diff($template->getEndTime());
+                    $minutes = $interval->h * 60 + $interval->i;
+                    $numberOfPizzas = $minutes / $template->getSlotDurationInMin() * $template->getCapacityPerSlot();
+                    return sprintf(
+                        '(%s - %s) - %s pizzas / %s mins (%s pizzas)',
+                        $template->getStartTime()->format('H:i'),
+                        $template->getEndTime()->format('H:i'),
+                        $template->getCapacityPerSlot(),
+                        $template->getSlotDurationInMin(),
+                        $numberOfPizzas
+                    );
+                },
             ])
         ;
     }
