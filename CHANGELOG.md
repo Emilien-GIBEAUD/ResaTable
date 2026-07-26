@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3
+- Fonctionnalité pizzas ( _**branch pizza**_ )
+    - Ajout des services disponibles et du formulaire de réservation (sous la liste des pizzas)
+
+- Toutes les fonctionnalités
+    - Modification du style des boutons
+
 ## 0.1.2
 - Fonctionnalité service de pizzas ( _**branch service**_ )
     - **Fait** _(dans cette version)_  
@@ -14,7 +21,7 @@
 
 - Fonctionnalité pizzas ( _**branch pizza**_ )
     - Gestion de la visibilité des pizzas
-    - Ajout de filtres
+    - Ajout de filtres (admin uniquement)
 
 
 ## 0.1.1

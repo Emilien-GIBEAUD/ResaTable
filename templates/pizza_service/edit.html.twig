@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Modifier un service</h1>
 
-    {{ include('pizza_service/_form.html.twig', {'button_label': 'Modifier'}) }}
+    {{ include('pizza_service/_form.html.twig', {'button_class': 'btn btn-warning', 'button_label': 'Modifier'}) }}
 
     <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
 

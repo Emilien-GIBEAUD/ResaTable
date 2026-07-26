@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Pizza;
 use App\Form\PizzaType;
 use App\Repository\PizzaRepository;
+use App\Repository\PizzaServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class PizzaController extends AbstractController
 {
     #[Route(name: 'app_pizza_index', methods: ['GET'])]
-    public function index(PizzaRepository $pizzaRepository, Request $request): Response
+    public function index(
+        PizzaRepository $pizzaRepository, 
+        PizzaServiceRepository $pizzaServiceRepository, 
+        Request $request
+        ): Response
     {
         $showActive = (int) $request->query->get('showActive', 2);
         $sort = $request->query->get('sort', 'id');
@@ -29,6 +34,7 @@ final class PizzaController extends AbstractController
         }
         return $this->render('pizza/index.html.twig', [
             'pizzas' => $pizzaRepository->findByFilters($showActive, $sort, $direction),
+            'services' => $pizzaServiceRepository->findAfterTomorrow(),
         ]);
     }
 

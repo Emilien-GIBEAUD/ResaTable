@@ -1,0 +1,9 @@
+/pizzas
+- gérer les pizzas non visibles dans le formulaire de réservation pour l'admin
+- Quand la qtt max du créneau sélectionné est atteinte
+    - désactiver le bouton "Ajouter au panier"
+    - Indiquer que la qtt max du créneau sélectionné est atteinte
+
+/pizzas/service
+- permettre un tri sur les dates de service
+- permettre de masquer les services passés

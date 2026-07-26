@@ -16,20 +16,20 @@ class PizzaServiceRepository extends ServiceEntityRepository
         parent::__construct($registry, PizzaService::class);
     }
 
-//    /**
-//     * @return PizzaService[] Returns an array of PizzaService objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+        * @return PizzaService[] Returns an array of PizzaService objects
+        */
+    public function findAfterTomorrow(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.serviceDate  >= :tomorrow')
+            ->setParameter('tomorrow', new \DateTimeImmutable('tomorrow'))
+            ->orderBy('p.serviceDate', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?PizzaService
 //    {

@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Modifier une pizza</h1>
 
-    {{ include('pizza/_form.html.twig', {'button_label': 'Modifier'}) }}
+    {{ include('pizza/_form.html.twig', {'button_class': 'btn btn-warning', 'button_label': 'Modifier'}) }}
 
     <a href="{{ path('app_pizza_index') }}">retour à la liste des pizzas</a>
 
