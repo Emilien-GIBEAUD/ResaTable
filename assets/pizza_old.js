@@ -1,10 +1,10 @@
+// --- Avant factorisation ---
 // gestion du panier de pizzas dans le formulaire de réservation sur la page /pizzas
 
 const addButton = document.getElementById('addPizza');
 const pizza = document.getElementById('pizza');
 const quantity = document.getElementById('quantity');
 const cartBody = document.getElementById('cartBody');
-const noItems = document.getElementById('noItems');
 const capacityAlert = document.getElementById('capacityAlert');
 let nbItems = 0;
 let cartTotal = document.getElementById('cartTotal');
@@ -17,32 +17,30 @@ addButton.addEventListener('click', () => {
     const name = option.dataset.name;
     const price = parseFloat(option.dataset.price);
     let qty = parseInt(quantity.value);
-    let totalToAdd = price * qty;
+    const total = price * qty;
     const row = document.createElement('tr');
 
     // Check if the pizza is already in the cart
     const rows = cartBody.querySelectorAll('tr');
-    for (const existingRow of rows) {
-        if (existingRow.cells[0].textContent === name) {    // Check availabilty and update qty
-            console.log("Ajout d'un item existant");
-            if (totalQuantity + qty > maxQuantity) {
-                qty = maxQuantity - totalQuantity;
-                const qtyToAdd = qty;
-                alert(`La quantité demandée dépasse la capacité disponible pour ce créneau horaire. La quantité a été ajustée à ${qty}.`);
-            }
-            for (let i = 0; i < qty; i++) {     // add qty
-                increaseItem(existingRow);
-                if (i === qty - 1) {
-                    return; // Exit the addButton listener
+    rows.forEach(existingRow => {
+        const existingName = existingRow.cells[0].textContent;
+        if (existingName === name) {
+            let loopQty = qty;
+            const increaseButton = existingRow.querySelector('.btnIncrease');
+            while(totalQuantity < maxQuantity && loopQty > 0) {
+                increaseButton.click(); // Simulate a click on the increase button
+                loopQty--;
+                if (loopQty <= 0) {
+                    break; // Exit the loop if qty is zero or less
                 }
             }
+            // return; // Exit the function if the pizza is already in the cart
         }
-    }
+    });
 
-    // Check if qty is available, if not => update qty and totalToAdd
+    // Check if qty is available
     if (totalQuantity + qty > maxQuantity) {
         qty = maxQuantity - totalQuantity;
-        totalToAdd = price * qty;
         alert(`La quantité demandée dépasse la capacité disponible pour ce créneau horaire. La quantité a été ajustée à ${qty}.`);
     }
 
@@ -50,7 +48,7 @@ addButton.addEventListener('click', () => {
         <td>${name}</td>
         <td>${qty}</td>
         <td>${price.toFixed(2)} €</td>
-        <td>${totalToAdd.toFixed(2)} €</td>
+        <td>${total.toFixed(2)} €</td>
         <td class="d-flex align-items-center gap-1">
             <button type="button" class="btn p-0 border-0 bg-transparent btnDecrease">
                 <i class="bi bi-dash-circle" width="32" height="32" role="img" aria-label="Bootstrap"></i>
@@ -62,10 +60,14 @@ addButton.addEventListener('click', () => {
         </td>
     `;
 
+    // Clear the "no items" message if this is the first item and add the new item
+    if (nbItems === 0) {
+        cartBody.innerHTML = '';
+    }
     cartBody.appendChild(row);
 
     // Update the total and the items count
-    cartTotal.textContent = (parseFloat(cartTotal.textContent) + totalToAdd).toFixed(2);
+    cartTotal.textContent = (parseFloat(cartTotal.textContent) + total).toFixed(2);
     if (totalQuantity + qty === maxQuantity) {
         const increaseButtons = document.querySelectorAll('.btnIncrease');
         increaseButtons.forEach(button => {
@@ -77,8 +79,6 @@ addButton.addEventListener('click', () => {
     nbItems++;
     totalQuantity += qty;
     cartTotalQuantity.textContent = totalQuantity;
-
-    updateCartStatus(1,row);
 
     // Add event listener to the remove button
     const removeButton = row.querySelector('button.btnRemove');
@@ -106,79 +106,63 @@ addButton.addEventListener('click', () => {
 
     // Add event listener to the increase button
     const increaseButton = row.querySelector('button.btnIncrease');
-    increaseButton.addEventListener('click', () => increaseItem(row));
+    increaseButton.addEventListener('click', () => {
+        const currentQty = parseInt(row.cells[1].textContent);
+        const newQty = currentQty + 1;
+        row.cells[1].textContent = newQty;
+        const unitPrice = parseFloat(row.cells[2].textContent);
+        const newTotal = parseFloat(row.cells[2].textContent) * newQty;
+        row.cells[3].textContent = newTotal.toFixed(2) + ' €';
+        const rowTotal = parseFloat(row.cells[3].textContent);
+        // Update the total and the items count
+        cartTotal.textContent = (parseFloat(cartTotal.textContent) + unitPrice).toFixed(2);
+        totalQuantity++;
+        cartTotalQuantity.textContent = totalQuantity;
+
+        if (totalQuantity >= maxQuantity) {
+            const increaseButtons = document.querySelectorAll('.btnIncrease');
+            increaseButtons.forEach(button => {
+                button.hidden = true;
+            });
+            addButton.hidden = true;
+            capacityAlert.classList.remove('d-none'); // Hide the capacity alert
+        }
+        console.log(`Ajout`);
+    });
 
     // Add event listener to the decrease button
     const decreaseButton = row.querySelector('button.btnDecrease');
-    decreaseButton.addEventListener('click', () => decreaseItem(row));
+    decreaseButton.addEventListener('click', () => {
+        const currentQty = parseInt(row.cells[1].textContent);
+        const newQty = currentQty - 1;
+        row.cells[1].textContent = newQty;
+        const unitPrice = parseFloat(row.cells[2].textContent);
+        const newTotal = parseFloat(row.cells[2].textContent) * newQty;
+        row.cells[3].textContent = newTotal.toFixed(2) + ' €';
+        const rowTotal = parseFloat(row.cells[3].textContent);
+        // Update the total and the items count
+        cartTotal.textContent = (parseFloat(cartTotal.textContent) - unitPrice).toFixed(2);
+        totalQuantity--;
+        cartTotalQuantity.textContent = totalQuantity;
+
+        if (totalQuantity < maxQuantity) {
+            const increaseButtons = document.querySelectorAll('.btnIncrease');
+            increaseButtons.forEach(button => {
+                button.hidden = false;
+            });
+            addButton.hidden = false;
+            capacityAlert.classList.add('d-none'); // Show the capacity alert
+        }
+        if (newQty === 0) {
+            nbItems--;
+
+            // Remove the item and add the "no items" message if no items are left
+            cartBody.removeChild(row);
+            if (nbItems === 0) {
+                cartBody.innerHTML = '<tr><td colspan="6" class="text-muted">Aucune pizza ajoutée.</td></tr>';
+            }
+        }
+    });
 
 });
-
-function updateCartStatus(newQty, row) {
-    if (newQty === 0) {
-        nbItems--;
-
-        // Remove the item and add the "no items" message if no items are left
-        cartBody.removeChild(row);
-        if (nbItems === 0) {
-            // cartBody.innerHTML = '<tr><td colspan="6" class="text-muted">Aucune pizza ajoutée.</td></tr>';
-            noItems.classList.remove("d-none")
-        }
-    }
-    if (nbItems > 0) {
-        noItems.classList.add("d-none");
-    }
-}
-
-function increaseItem(row) {
-    const currentQty = parseInt(row.cells[1].textContent);
-    const newQty = currentQty + 1;
-    row.cells[1].textContent = newQty;
-    const unitPrice = parseFloat(row.cells[2].textContent);
-    const newTotal = parseFloat(row.cells[2].textContent) * newQty;
-    row.cells[3].textContent = newTotal.toFixed(2) + ' €';
-    const rowTotal = parseFloat(row.cells[3].textContent);
-    // Update the total and the items count
-    cartTotal.textContent = (parseFloat(cartTotal.textContent) + unitPrice).toFixed(2);
-    totalQuantity++;
-    cartTotalQuantity.textContent = totalQuantity;
-
-    updateCapacityStatus();
-}
-
-function decreaseItem(row) {
-    const currentQty = parseInt(row.cells[1].textContent);
-    const newQty = currentQty - 1;
-    row.cells[1].textContent = newQty;
-    const unitPrice = parseFloat(row.cells[2].textContent);
-    const newTotal = parseFloat(row.cells[2].textContent) * newQty;
-    row.cells[3].textContent = newTotal.toFixed(2) + ' €';
-    const rowTotal = parseFloat(row.cells[3].textContent);
-    // Update the total and the items count
-    cartTotal.textContent = (parseFloat(cartTotal.textContent) - unitPrice).toFixed(2);
-    totalQuantity--;
-    cartTotalQuantity.textContent = totalQuantity;
-
-    updateCapacityStatus();
-    updateCartStatus(newQty,row);
-}
-
-function updateCapacityStatus() {
-    const increaseButtons = document.querySelectorAll('.btnIncrease');
-    if (totalQuantity >= maxQuantity) {
-        const increaseButtons = document.querySelectorAll('.btnIncrease');
-        increaseButtons.forEach(button => {
-            button.hidden = true;
-        });
-        addButton.hidden = true;
-        capacityAlert.classList.remove('d-none'); // Show the capacity alert
-    } else {
-        const increaseButtons = document.querySelectorAll('.btnIncrease');
-        increaseButtons.forEach(button => {
-            button.hidden = false;
-        });
-        addButton.hidden = false;
-        capacityAlert.classList.add('d-none'); // Show the capacity alert
-    }
-}
 

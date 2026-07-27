@@ -148,18 +148,21 @@
                         </tr>
                     </thead>
                     <tbody id="cartBody">
-                        <tr>
+                        <tr id="noItems">
                             <td colspan="6" class="text-muted">
                                 Aucune pizza ajoutée.
                             </td>
                         </tr>
                     </tbody>
                 </table>
-
-
                 <div class="text-end">
+                    <span id="cartTotalQuantity">0</span> pizza(s) dans le panier. <br>
                     <strong>Total : <span id="cartTotal">0,00</span> €</strong>
                 </div>
+                <p class="alert alert-warning d-none" id="capacityAlert">
+                    La capacité disponible pour ce créneau horaire est atteinte. Vous pouvez passer commande en l'état mais pas ajouter de pizza.<br>Le cas échéant, veuillez choisir un autre créneau, passer plusieurs commandes ou bien contactez-nous par téléphone.
+                </p>
+
                 <div class="col-md-6"> 
                     <label class="form-label required" for="pizza">Votre pizza</label>
                     <select class="form-select" name="pizza" id="pizza">
