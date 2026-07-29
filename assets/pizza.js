@@ -1,4 +1,4 @@
-// gestion du panier de pizzas dans le formulaire de réservation sur la page /pizzas
+// Pizzas cart management in the booking form on the page /pizzas
 
 const addButton = document.getElementById('addPizza');
 const pizza = document.getElementById('pizza');
@@ -20,22 +20,19 @@ addButton.addEventListener('click', () => {
     let totalToAdd = price * qty;
     const row = document.createElement('tr');
 
-    // Check if the pizza is already in the cart
+    // Check if the pizza is already in the cart and decrease qty if necessay
     const rows = cartBody.querySelectorAll('tr');
     for (const existingRow of rows) {
         if (existingRow.cells[0].textContent === name) {    // Check availabilty and update qty
             console.log("Ajout d'un item existant");
             if (totalQuantity + qty > maxQuantity) {
                 qty = maxQuantity - totalQuantity;
-                const qtyToAdd = qty;
                 alert(`La quantité demandée dépasse la capacité disponible pour ce créneau horaire. La quantité a été ajustée à ${qty}.`);
             }
             for (let i = 0; i < qty; i++) {     // add qty
                 increaseItem(existingRow);
-                if (i === qty - 1) {
-                    return; // Exit the addButton listener
-                }
             }
+            return; // Exit the addButton listener
         }
     }
 
@@ -48,9 +45,9 @@ addButton.addEventListener('click', () => {
 
     row.innerHTML = `
         <td>${name}</td>
-        <td>${qty}</td>
-        <td>${price.toFixed(2)} €</td>
-        <td>${totalToAdd.toFixed(2)} €</td>
+        <td class="quantity">${qty}</td>
+        <td class="price">${price.toFixed(2)} €</td>
+        <td class="total">${totalToAdd.toFixed(2)} €</td>
         <td class="d-flex align-items-center gap-1">
             <button type="button" class="btn p-0 border-0 bg-transparent btnDecrease">
                 <i class="bi bi-dash-circle" width="32" height="32" role="img" aria-label="Bootstrap"></i>
@@ -66,43 +63,16 @@ addButton.addEventListener('click', () => {
 
     // Update the total and the items count
     cartTotal.textContent = (parseFloat(cartTotal.textContent) + totalToAdd).toFixed(2);
-    if (totalQuantity + qty === maxQuantity) {
-        const increaseButtons = document.querySelectorAll('.btnIncrease');
-        increaseButtons.forEach(button => {
-            button.hidden = true;
-        });
-        addButton.hidden = true;
-        capacityAlert.classList.remove('d-none'); // Hide the capacity alert
-    }
     nbItems++;
     totalQuantity += qty;
     cartTotalQuantity.textContent = totalQuantity;
 
+    updateCapacityStatus();
     updateCartStatus(1,row);
 
     // Add event listener to the remove button
     const removeButton = row.querySelector('button.btnRemove');
-    removeButton.addEventListener('click', () => {
-
-        const rowTotal = parseFloat(row.cells[3].textContent);
-        // Update the total and the items count
-        cartTotal.textContent = (parseFloat(cartTotal.textContent) - rowTotal).toFixed(2);
-        nbItems--;
-        totalQuantity -= parseInt(row.cells[1].textContent);
-        cartTotalQuantity.textContent = totalQuantity;
-
-        // Remove the item and add the "no items" message if no items are left
-        cartBody.removeChild(row);
-        if (nbItems === 0) {
-            cartBody.innerHTML = '<tr><td colspan="6" class="text-muted">Aucune pizza ajoutée.</td></tr>';
-        }
-        const increaseButtons = document.querySelectorAll('.btnIncrease');
-        increaseButtons.forEach(button => {
-            button.hidden = false;
-        });
-        addButton.hidden = false;
-        capacityAlert.classList.add('d-none'); // Show the capacity alert
-    });
+    removeButton.addEventListener('click', () => removeItem(row));
 
     // Add event listener to the increase button
     const increaseButton = row.querySelector('button.btnIncrease');
@@ -113,6 +83,65 @@ addButton.addEventListener('click', () => {
     decreaseButton.addEventListener('click', () => decreaseItem(row));
 
 });
+
+function removeItem(row) {
+    const rowTotal = parseFloat(row.querySelector('.total').textContent);
+    // Update the total and the items count
+    cartTotal.textContent = (parseFloat(cartTotal.textContent) - rowTotal).toFixed(2);
+    totalQuantity -= parseInt(row.querySelector('.quantity').textContent);
+    cartTotalQuantity.textContent = totalQuantity;
+
+    updateCapacityStatus()
+    updateCartStatus(0, row)
+}
+
+function increaseItem(row) {
+    const currentQty = parseInt(row.querySelector('.quantity').textContent);
+    const newQty = currentQty + 1;
+    row.querySelector('.quantity').textContent = newQty;
+    const unitPrice = parseFloat(row.querySelector('.price').textContent);
+    const newTotal = parseFloat(row.querySelector('.price').textContent) * newQty;
+    row.querySelector('.total').textContent = newTotal.toFixed(2) + ' €';
+    // Update the total and the items count
+    cartTotal.textContent = (parseFloat(cartTotal.textContent) + unitPrice).toFixed(2);
+    totalQuantity++;
+    cartTotalQuantity.textContent = totalQuantity;
+
+    updateCapacityStatus();
+}
+
+function decreaseItem(row) {
+    const currentQty = parseInt(row.querySelector('.quantity').textContent);
+    const newQty = currentQty - 1;
+    row.querySelector('.quantity').textContent = newQty;
+    const unitPrice = parseFloat(row.querySelector('.price').textContent);
+    const newTotal = parseFloat(row.querySelector('.price').textContent) * newQty;
+    row.querySelector('.total').textContent = newTotal.toFixed(2) + ' €';
+    // Update the total and the items count
+    cartTotal.textContent = (parseFloat(cartTotal.textContent) - unitPrice).toFixed(2);
+    totalQuantity--;
+    cartTotalQuantity.textContent = totalQuantity;
+
+    updateCapacityStatus();
+    updateCartStatus(newQty,row);
+}
+
+function updateCapacityStatus() {
+    const increaseButtons = document.querySelectorAll('.btnIncrease');
+    if (totalQuantity >= maxQuantity) {
+        increaseButtons.forEach(button => {
+            button.hidden = true;
+        });
+        addButton.hidden = true;
+        capacityAlert.classList.remove('d-none'); // Show the capacity alert
+    } else {
+        increaseButtons.forEach(button => {
+            button.hidden = false;
+        });
+        addButton.hidden = false;
+        capacityAlert.classList.add('d-none'); // Show the capacity alert
+    }
+}
 
 function updateCartStatus(newQty, row) {
     if (newQty === 0) {
@@ -127,58 +156,6 @@ function updateCartStatus(newQty, row) {
     }
     if (nbItems > 0) {
         noItems.classList.add("d-none");
-    }
-}
-
-function increaseItem(row) {
-    const currentQty = parseInt(row.cells[1].textContent);
-    const newQty = currentQty + 1;
-    row.cells[1].textContent = newQty;
-    const unitPrice = parseFloat(row.cells[2].textContent);
-    const newTotal = parseFloat(row.cells[2].textContent) * newQty;
-    row.cells[3].textContent = newTotal.toFixed(2) + ' €';
-    const rowTotal = parseFloat(row.cells[3].textContent);
-    // Update the total and the items count
-    cartTotal.textContent = (parseFloat(cartTotal.textContent) + unitPrice).toFixed(2);
-    totalQuantity++;
-    cartTotalQuantity.textContent = totalQuantity;
-
-    updateCapacityStatus();
-}
-
-function decreaseItem(row) {
-    const currentQty = parseInt(row.cells[1].textContent);
-    const newQty = currentQty - 1;
-    row.cells[1].textContent = newQty;
-    const unitPrice = parseFloat(row.cells[2].textContent);
-    const newTotal = parseFloat(row.cells[2].textContent) * newQty;
-    row.cells[3].textContent = newTotal.toFixed(2) + ' €';
-    const rowTotal = parseFloat(row.cells[3].textContent);
-    // Update the total and the items count
-    cartTotal.textContent = (parseFloat(cartTotal.textContent) - unitPrice).toFixed(2);
-    totalQuantity--;
-    cartTotalQuantity.textContent = totalQuantity;
-
-    updateCapacityStatus();
-    updateCartStatus(newQty,row);
-}
-
-function updateCapacityStatus() {
-    const increaseButtons = document.querySelectorAll('.btnIncrease');
-    if (totalQuantity >= maxQuantity) {
-        const increaseButtons = document.querySelectorAll('.btnIncrease');
-        increaseButtons.forEach(button => {
-            button.hidden = true;
-        });
-        addButton.hidden = true;
-        capacityAlert.classList.remove('d-none'); // Show the capacity alert
-    } else {
-        const increaseButtons = document.querySelectorAll('.btnIncrease');
-        increaseButtons.forEach(button => {
-            button.hidden = false;
-        });
-        addButton.hidden = false;
-        capacityAlert.classList.add('d-none'); // Show the capacity alert
     }
 }
 

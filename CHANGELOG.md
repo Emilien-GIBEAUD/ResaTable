@@ -2,12 +2,16 @@
 
 ## 0.1.4
 - Fonctionnalité pizzas ( _**branch pizza**_ )
-    - Correction/amélioration du fonctionnement du panier quand qtt max atteinte
-        - Désactivation du bouton "Ajouter au panier"
-        - Affichage d'une alerte quand qtt max atteinte
-        - Correction d'un bug permettant de dépasser la qtt max en ajoutant depuis "Ajouter au panier"
-    - _Factorisation du code JS_ ( _EN COURS_ )
-    - _Suppression des pizzas non visibles dans le formulaire de réservation pour l'admin_ ( _EN COURS_ )
+    - **Fait** _(dans cette version)_  
+        - Correction/amélioration du fonctionnement du panier quand qtt max atteinte
+            - Désactivation du bouton "Ajouter au panier"
+            - Affichage d'une alerte quand qtt max atteinte
+            - Correction d'un bug permettant de dépasser la qtt max en ajoutant depuis "Ajouter au panier"
+
+    - _Reste à faire (non exhaustif)_ 
+        - Factorisation du code JS
+        - _Suppression des pizzas non visibles dans le formulaire de réservation pour l'admin_
+
 
 ## 0.1.3
 - Fonctionnalité pizzas ( _**branch pizza**_ )
