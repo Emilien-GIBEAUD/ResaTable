@@ -141,8 +141,8 @@
                     <thead>
                         <tr>
                             <th>Pizza</th>
-                            <th>Quantité</th>
-                            <th>Prix unitaire</th>
+                            <th>Qtt</th>
+                            <th>Prix unit.</th>
                             <th>Total</th>
                             <th>Action</th>
                         </tr>
@@ -166,7 +166,7 @@
                 <div class="col-md-6"> 
                     <label class="form-label required" for="pizza">Votre pizza</label>
                     <select class="form-select" name="pizza" id="pizza">
-                        {% for pizza in pizzas %}
+                        {% for pizza in pizzasSelect %}
                             <option value="{{ pizza.id }}" data-name="{{ pizza.name }}" data-price="{{ pizza.price }}">
                                 {{ pizza.name }} ({{ pizza.price }} €)
                             </option>
@@ -175,11 +175,7 @@
                 </div>
                 <div class="col-md-2"> 
                     <label class="form-label required" for="quantity">Quantité</label>
-                    <select class="form-select" name="quantity" id="quantity">
-                        {% for i in 1..5 %}
-                            <option value="{{ i }}">{{ i }}</option>
-                        {% endfor %}
-                    </select>
+                    <input type="number" class="form-control" name="quantity" id="quantity" value="1" min="1" max="5">
                 </div>
                 <div class="col-md-3 align-content-end"> 
                     <button type="button" id="addPizza" class="btn btn-primary">Ajouter au panier</button>

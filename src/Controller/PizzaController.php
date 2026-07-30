@@ -34,6 +34,7 @@ final class PizzaController extends AbstractController
         }
         return $this->render('pizza/index.html.twig', [
             'pizzas' => $pizzaRepository->findByFilters($showActive, $sort, $direction),
+            'pizzasSelect' => $pizzaRepository->findByFilters(1, 'price', 'asc'),
             'services' => $pizzaServiceRepository->findAfterTomorrow(),
         ]);
     }
