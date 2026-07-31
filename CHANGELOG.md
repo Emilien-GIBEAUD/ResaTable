@@ -4,7 +4,12 @@
 - Fonctionnalité pizzas ( _**branch pizza**_ )
     - Suppression des pizzas non visibles dans le formulaire de réservation pour l'admin
     - Mise à jour mineure sur les entêtes des colonnes du panier
-    - Mise à jour de l'input "quantité" dans le formulaire d'ajout au panier
+    - Mise à jour de l'input "quantité" dans le formulaire d'ajout au panier 
+<br>
+- Général 
+    - Mise à jour de la navbar
+    - Suppression de la page /table
+    - Ajout de pages fictives pour éviter les 404
 <br>
 <br>
 
