@@ -21,6 +21,21 @@ class PizzaService
     #[ORM\JoinColumn(nullable: false)]
     private ?PizzaServiceTemplate $template = null;
 
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $startTime = null;
+
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $endTime = null;
+
+    #[ORM\Column]
+    private ?int $slotDurationInMin = null;
+
+    #[ORM\Column]
+    private ?int $capacityPerSlot = null;
+
+    #[ORM\Column]
+    private ?bool $bookingOpen = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,6 +61,66 @@ class PizzaService
     public function setTemplate(?PizzaServiceTemplate $template): static
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function getStartTime(): ?\DateTimeImmutable
+    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(\DateTimeImmutable $startTime): static
+    {
+        $this->startTime = $startTime;
+
+        return $this;
+    }
+
+    public function getEndTime(): ?\DateTimeImmutable
+    {
+        return $this->endTime;
+    }
+
+    public function setEndTime(\DateTimeImmutable $endTime): static
+    {
+        $this->endTime = $endTime;
+
+        return $this;
+    }
+
+    public function getSlotDurationInMin(): ?int
+    {
+        return $this->slotDurationInMin;
+    }
+
+    public function setSlotDurationInMin(int $slotDurationInMin): static
+    {
+        $this->slotDurationInMin = $slotDurationInMin;
+
+        return $this;
+    }
+
+    public function getCapacityPerSlot(): ?int
+    {
+        return $this->capacityPerSlot;
+    }
+
+    public function setCapacityPerSlot(int $capacityPerSlot): static
+    {
+        $this->capacityPerSlot = $capacityPerSlot;
+
+        return $this;
+    }
+
+    public function isBookingOpen(): ?bool
+    {
+        return $this->bookingOpen;
+    }
+
+    public function setBookingOpen(bool $bookingOpen): static
+    {
+        $this->bookingOpen = $bookingOpen;
 
         return $this;
     }

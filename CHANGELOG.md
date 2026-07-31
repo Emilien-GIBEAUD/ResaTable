@@ -1,17 +1,13 @@
 # Changelog
 
-## 0.1.5
-- Fonctionnalité pizzas ( _**branch pizza**_ )
-    - Suppression des pizzas non visibles dans le formulaire de réservation pour l'admin
-    - Mise à jour mineure sur les entêtes des colonnes du panier
-    - Mise à jour de l'input "quantité" dans le formulaire d'ajout au panier 
+## 0.1.6
+- Fonctionnalité service de pizzas ( _**branch service**_ )
+    - Modification des données de service _EN COURS_
+        - Modèles ne servant plus que lors de la création (relation conservée à titre informatif)
+        - Recopie des données du modèle lors de la création du service
+        - Modification des données du service rendu possible ensuite
 <br>
-- Général 
-    - Mise à jour de la navbar
-    - Suppression de la page /table
-    - Ajout de pages fictives pour éviter les 404
-<br>
-<br>
+
 
 ## A venir dans les prochaines version <span style="font-size: 14px;">(non exhaustif)</span>
 - Fonctionnalité pizzas ( _**branch pizza**_ )
@@ -29,6 +25,19 @@
 <br>
 
 ## Versions antérieures
+### 0.1.5
+---
+- Fonctionnalité pizzas ( _**branch pizza**_ )
+    - Suppression des pizzas non visibles dans le formulaire de réservation pour l'admin
+    - Mise à jour mineure sur les entêtes des colonnes du panier
+    - Mise à jour de l'input "quantité" dans le formulaire d'ajout au panier 
+<br>
+- Général 
+    - Mise à jour de la navbar
+    - Suppression de la page /table
+    - Ajout de pages fictives pour éviter les 404
+
+
 ### 0.1.4
 ---
 - Fonctionnalité pizzas ( _**branch pizza**_ )
@@ -40,7 +49,6 @@
             - Factorisation du code JS
     - _Reste à faire (non exhaustif)_ 
         - _Suppression des pizzas non visibles dans le formulaire de réservation pour l'admin_
-
 
 ### 0.1.3
 ---
