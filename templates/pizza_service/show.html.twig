@@ -13,19 +13,27 @@
             </tr>
             <tr>
                 <th>Début service</th>
-                <td>{{ pizza_service.template.startTime|date('H:i') }}</td>
+                <td>{{ pizza_service.startTime|date('H:i') }}</td>
             </tr>
             <tr>
                 <th>Fin service</th>
-                <td>{{ pizza_service.template.endTime|date('H:i') }}</td>
+                <td>{{ pizza_service.endTime|date('H:i') }}</td>
             </tr>
             <tr>
                 <th>Durée créneau (min.)</th>
-                <td>{{ pizza_service.template.slotDurationInMin }}</td>
+                <td>{{ pizza_service.slotDurationInMin }}</td>
             </tr>
             <tr>
                 <th>Capacité créneau</th>
-                <td>{{ pizza_service.template.capacityPerSlot }}</td>
+                <td>{{ pizza_service.capacityPerSlot }}</td>
+            </tr>
+            <tr>
+                <th>Réservation ouverte</th>
+                <td>{{ pizza_service.bookingOpen ? 'oui' : 'non' }}</td>
+            </tr>
+            <tr>
+                <th>Modèle d'origine (informatif)</th>
+                <td>{{ pizza_service.template.name }}</td>
             </tr>
         </tbody>
     </table>

@@ -13,6 +13,7 @@
                 <th>Fin service</th>
                 <th>Durée créneau (min.)</th>
                 <th>Capacité créneau</th>
+                <th>Réservation ouverte</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -20,10 +21,11 @@
         {% for pizza_service in pizza_services %}
             <tr>
                 <td>{{ pizza_service.serviceDate|date('Y-m-d') }}</td>
-                <td>{{ pizza_service.template.startTime|date('H:i') }}</td>
-                <td>{{ pizza_service.template.endTime|date('H:i') }}</td>
-                <td>{{ pizza_service.template.slotDurationInMin }}</td>
-                <td>{{ pizza_service.template.capacityPerSlot }}</td>
+                <td>{{ pizza_service.startTime|date('H:i') }}</td>
+                <td>{{ pizza_service.endTime|date('H:i') }}</td>
+                <td>{{ pizza_service.slotDurationInMin }}</td>
+                <td>{{ pizza_service.capacityPerSlot }}</td>
+                <td>{{ pizza_service.bookingOpen ? 'oui' : 'non' }}</td>
                 <td>
                     <a href="{{ path('app_pizza_service_show', {'id': pizza_service.id}) }}">Voir</a>
                     <a href="{{ path('app_pizza_service_edit', {'id': pizza_service.id}) }}">Modifier</a>
@@ -31,7 +33,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">Pas de services de pizza disponibles</td>
+                <td colspan="7">Pas de services de pizza disponibles</td>
             </tr>
         {% endfor %}
         </tbody>

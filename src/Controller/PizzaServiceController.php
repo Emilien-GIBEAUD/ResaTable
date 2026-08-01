@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\PizzaService;
-use App\Form\PizzaServiceType;
+use App\Form\PizzaServiceNewType;
+use App\Form\PizzaServiceEditType;
 use App\Repository\PizzaServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,13 +26,19 @@ final class PizzaServiceController extends AbstractController
     }
 
     #[Route('/new', name: 'app_pizza_service_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request,EntityManagerInterface $entityManager): Response
     {
         $pizzaService = new PizzaService();
-        $form = $this->createForm(PizzaServiceType::class, $pizzaService);
+        $form = $this->createForm(PizzaServiceNewType::class, $pizzaService);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $template = $pizzaService->getTemplate();
+            $pizzaService->setStartTime($template->getStartTime());
+            $pizzaService->setEndTime($template->getEndTime());
+            $pizzaService->setSlotDurationInMin($template->getSlotDurationInMin());
+            $pizzaService->setCapacityPerSlot($template->getCapacityPerSlot());
+            $pizzaService->setBookingOpen(true);
             $entityManager->persist($pizzaService);
             $entityManager->flush();
 
@@ -55,7 +62,7 @@ final class PizzaServiceController extends AbstractController
     #[Route('/{id}/edit', name: 'app_pizza_service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PizzaService $pizzaService, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(PizzaServiceType::class, $pizzaService);
+        $form = $this->createForm(PizzaServiceEditType::class, $pizzaService);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
