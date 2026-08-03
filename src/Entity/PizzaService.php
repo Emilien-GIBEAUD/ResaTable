@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PizzaServiceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +37,17 @@ class PizzaService
 
     #[ORM\Column]
     private ?bool $bookingOpen = null;
+
+    /**
+     * @var Collection<int, PizzaServiceSlot>
+     */
+    #[ORM\OneToMany(targetEntity: PizzaServiceSlot::class, mappedBy: 'service', orphanRemoval: true)]
+    private Collection $pizzaServiceSlots;
+
+    public function __construct()
+    {
+        $this->pizzaServiceSlots = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +134,36 @@ class PizzaService
     public function setBookingOpen(bool $bookingOpen): static
     {
         $this->bookingOpen = $bookingOpen;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PizzaServiceSlot>
+     */
+    public function getPizzaServiceSlots(): Collection
+    {
+        return $this->pizzaServiceSlots;
+    }
+
+    public function addPizzaServiceSlot(PizzaServiceSlot $pizzaServiceSlot): static
+    {
+        if (!$this->pizzaServiceSlots->contains($pizzaServiceSlot)) {
+            $this->pizzaServiceSlots->add($pizzaServiceSlot);
+            $pizzaServiceSlot->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removePizzaServiceSlot(PizzaServiceSlot $pizzaServiceSlot): static
+    {
+        if ($this->pizzaServiceSlots->removeElement($pizzaServiceSlot)) {
+            // set the owning side to null (unless already changed)
+            if ($pizzaServiceSlot->getService() === $this) {
+                $pizzaServiceSlot->setService(null);
+            }
+        }
 
         return $this;
     }

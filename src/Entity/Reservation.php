@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ReservationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
@@ -39,6 +41,21 @@ class Reservation
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    /**
+     * @var Collection<int, ReservationItem>
+     */
+    #[ORM\OneToMany(targetEntity: ReservationItem::class, mappedBy: 'reservation', orphanRemoval: true)]
+    private Collection $reservationItems;
+
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PizzaServiceSlot $slot = null;
+
+    public function __construct()
+    {
+        $this->reservationItems = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -149,6 +166,48 @@ class Reservation
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReservationItem>
+     */
+    public function getReservationItems(): Collection
+    {
+        return $this->reservationItems;
+    }
+
+    public function addReservationItem(ReservationItem $reservationItem): static
+    {
+        if (!$this->reservationItems->contains($reservationItem)) {
+            $this->reservationItems->add($reservationItem);
+            $reservationItem->setReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationItem(ReservationItem $reservationItem): static
+    {
+        if ($this->reservationItems->removeElement($reservationItem)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationItem->getReservation() === $this) {
+                $reservationItem->setReservation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSlot(): ?PizzaServiceSlot
+    {
+        return $this->slot;
+    }
+
+    public function setSlot(?PizzaServiceSlot $slot): static
+    {
+        $this->slot = $slot;
 
         return $this;
     }

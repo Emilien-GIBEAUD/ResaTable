@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PizzaServiceSlotRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,21 @@ class PizzaServiceSlot
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'slot', orphanRemoval: true)]
+    private Collection $reservations;
+
+    #[ORM\ManyToOne(inversedBy: 'pizzaServiceSlots')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PizzaService $service = null;
+
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +92,48 @@ class PizzaServiceSlot
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setSlot($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getSlot() === $this) {
+                $reservation->setSlot(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getService(): ?PizzaService
+    {
+        return $this->service;
+    }
+
+    public function setService(?PizzaService $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }
