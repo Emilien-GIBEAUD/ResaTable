@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PizzaServiceSlot index{% endblock %}
+
+{% block body %}
+    <h1>PizzaServiceSlot index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>StartTime</th>
+                <th>Capacity</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pizza_service_slot in pizza_service_slots %}
+            <tr>
+                <td>{{ pizza_service_slot.id }}</td>
+                <td>{{ pizza_service_slot.startTime ? pizza_service_slot.startTime|date('H:i:s') : '' }}</td>
+                <td>{{ pizza_service_slot.capacity }}</td>
+                <td>{{ pizza_service_slot.createdAt ? pizza_service_slot.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ pizza_service_slot.updatedAt ? pizza_service_slot.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_slot_show', {'id': pizza_service_slot.id}) }}">show</a>
+                    <a href="{{ path('app_slot_edit', {'id': pizza_service_slot.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_slot_new') }}">Create new</a>
+{% endblock %}

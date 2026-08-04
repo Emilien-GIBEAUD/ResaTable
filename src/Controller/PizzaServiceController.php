@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\PizzaService;
-use App\Form\PizzaServiceNewType;
 use App\Form\PizzaServiceEditType;
+use App\Form\PizzaServiceNewType;
 use App\Repository\PizzaServiceRepository;
+use App\Service\SlotGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,7 @@ final class PizzaServiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Add the  service to the datatbase
             $template = $pizzaService->getTemplate();
             $pizzaService->setStartTime($template->getStartTime());
             $pizzaService->setEndTime($template->getEndTime());
@@ -40,6 +42,25 @@ final class PizzaServiceController extends AbstractController
             $pizzaService->setCapacityPerSlot($template->getCapacityPerSlot());
             $pizzaService->setBookingOpen(true);
             $entityManager->persist($pizzaService);
+            $entityManager->flush();
+
+            // Generate the slots for the service
+            $slots = new SlotGenerator();
+            $slots = $slots->generateSlots(
+                $pizzaService->getStartTime(),
+                $pizzaService->getEndTime(),
+                $pizzaService->getSlotDurationInMin()
+            );
+
+            // Add the slots to the database
+            foreach ($slots as $slot) {
+                $pizzaServiceSlot = new \App\Entity\PizzaServiceSlot();
+                $pizzaServiceSlot->setStartTime($slot['start_time']);
+                $pizzaServiceSlot->setCapacity($pizzaService->getCapacityPerSlot());
+                $pizzaServiceSlot->setService($pizzaService);
+                $pizzaServiceSlot->setCreatedAt(new \DateTimeImmutable());
+                $entityManager->persist($pizzaServiceSlot);
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_pizza_service_index', [], Response::HTTP_SEE_OTHER);
@@ -62,11 +83,50 @@ final class PizzaServiceController extends AbstractController
     #[Route('/{id}/edit', name: 'app_pizza_service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PizzaService $pizzaService, EntityManagerInterface $entityManager): Response
     {
+        $oldStartTime = $pizzaService->getStartTime();
+        $oldEndTime = $pizzaService->getEndTime();
+        $oldSlotDuration = $pizzaService->getSlotDurationInMin();
+        $oldCapacity = $pizzaService->getCapacityPerSlot();
+        
         $form = $this->createForm(PizzaServiceEditType::class, $pizzaService);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+
+            $deleteSlots = 
+                $form->get('startTime')->getData() != $oldStartTime ||
+                $form->get('endTime')->getData() != $oldEndTime ||
+                $form->get('slotDurationInMin')->getData() !== $oldSlotDuration ||
+                $form->get('capacityPerSlot')->getData() !== $oldCapacity;
+
+            // Delete the existing slots for the service and create new ones
+            // (except if the modification concerns only the ServiceDate or the BookingOpen status)
+            if ($deleteSlots) {
+                foreach ($pizzaService->getPizzaServiceSlots() as $slot) {
+                    $entityManager->remove($slot);
+                }
+                $entityManager->flush();
+
+                // Generate the slots for the service
+                $slots = new SlotGenerator();
+                $slots = $slots->generateSlots(
+                    $pizzaService->getStartTime(),
+                    $pizzaService->getEndTime(),
+                    $pizzaService->getSlotDurationInMin()
+                );
+
+                // Add the slots to the database
+                foreach ($slots as $slot) {
+                    $pizzaServiceSlot = new \App\Entity\PizzaServiceSlot();
+                    $pizzaServiceSlot->setStartTime($slot['start_time']);
+                    $pizzaServiceSlot->setCapacity($pizzaService->getCapacityPerSlot());
+                    $pizzaServiceSlot->setService($pizzaService);
+                    $pizzaServiceSlot->setCreatedAt(new \DateTimeImmutable());
+                    $entityManager->persist($pizzaServiceSlot);
+                }
+                $entityManager->flush();
+            }
 
             return $this->redirectToRoute('app_pizza_service_index', [], Response::HTTP_SEE_OTHER);
         }

@@ -6,3 +6,12 @@
 
 Assets Mapper
 - vérifier ce qui qui est importé sur chaque page
+
+
+Nom des classes :
+A voir pour renommage de :
+PizzaServiceTemplate        en      ServiceTemplate ou Template
+PizzaService                en      Service
+PizzaServiceSlot            en      ServiceSlot ou Slot
+dans Entity, Repository, Controller, Form et templates.
+A voir si renommage des tables (et migration)
