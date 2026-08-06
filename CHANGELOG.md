@@ -2,8 +2,15 @@
 
 ## 0.2.0
 - Fonctionnalité créneau ( _**branch slot**_ )
-    - Crud des créneaux _---EN COURS---_
+    - Crud des créneaux
+        - Ajout des créneaux lors de la création d'un service
+        - Suppression/recréation des créneaux lors de la modification d'un service
+        - Modification de la capacité d'un créneau (par l'admin)
 <br>
+- Fonctionnalité pizzas ( _**branch pizza**_ )
+    - Ajout des créneaux du service sélectionné dans le formulaire de réservation
+    - Gestion de la capacité des créneaux
+        - Alerte en cas de capacité dépassée (en cas de modification de créneau)
 <br>  
 
 [Voir les versions antérieures](#versions)
@@ -11,7 +18,7 @@
 ## A venir dans les prochaines version <span style="font-size: 14px;">(non exhaustif)</span>
 <!-- NE PAS OUBLIER le fichier "TODO" pour les autres améliorations -->
 - Fonctionnalité créneau ( _**branch slot**_ )
-    - _Gestion des créneaux_
+    - _Empêcher la mise à jour d'un service comportant des réservations_
 <br>
 - Fonctionnalité réservation ( _**branch booking**_ )
     - _Gestion de la réservation_
