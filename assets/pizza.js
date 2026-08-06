@@ -1,5 +1,4 @@
 // Pizzas cart management in the booking form on the page /pizzas
-
 const addButton = document.getElementById('addPizza');
 const pizza = document.getElementById('pizza');
 const quantity = document.getElementById('quantity');
@@ -11,6 +10,23 @@ let cartTotal = document.getElementById('cartTotal');
 let totalQuantity = 0;
 let cartTotalQuantity = document.getElementById('cartTotalQuantity');
 const maxQuantity = 5; // To be replaced with the booking slot max quantity
+
+const serviceSelect = document.getElementById("serviceDate");
+const slotSelect = document.getElementById("serviceSlot");
+
+serviceSelect.addEventListener("change", async function () {
+    const response = await fetch(`/slot/serviceSlots/${this.value}/json`);
+    const slots = await response.json();
+
+    slotSelect.innerHTML = "";
+    slots.forEach(slot => {
+        const option = document.createElement("option");
+        option.value = slot.id;
+        option.textContent = `${slot.startTime} (${slot.capacity} ${slot.capacity > 1 ? 'pizzas restantes' : 'place restante'})`;
+        slotSelect.appendChild(option);
+    });
+});
+serviceSelect.dispatchEvent(new Event("change"));
 
 addButton.addEventListener('click', () => {
     const option = pizza.options[pizza.selectedIndex];

@@ -128,9 +128,7 @@
                 <div class="col-md-4"> 
                     <label class="form-label required" for="serviceSlot">Choisissez votre horaire</label>
                     <select class="form-select" name="serviceSlot" id="serviceSlot">
-                        {% for service in services %}
-                            <option value="{{ service.id }}">--- 19:55 (3 pizzas restantes) ---</option>
-                        {% endfor %}
+                        <!-- injected -->
                     </select>
                 </div>
                 <hr class="my-2">

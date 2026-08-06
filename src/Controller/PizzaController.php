@@ -6,6 +6,7 @@ use App\Entity\Pizza;
 use App\Form\PizzaType;
 use App\Repository\PizzaRepository;
 use App\Repository\PizzaServiceRepository;
+use App\Repository\PizzaServiceSlotRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/pizzas')]
 final class PizzaController extends AbstractController
 {
-    #[Route(name: 'app_pizza_index', methods: ['GET'])]
+    #[Route(name: 'app_pizza_index', methods: ['GET', 'POST'])]
     public function index(
         PizzaRepository $pizzaRepository, 
         PizzaServiceRepository $pizzaServiceRepository, 
@@ -26,6 +27,7 @@ final class PizzaController extends AbstractController
         $showActive = (int) $request->query->get('showActive', 2);
         $sort = $request->query->get('sort', 'id');
         $direction = $request->query->get('direction', 'asc');
+        $services = $pizzaServiceRepository->findAfterTomorrow();
 
         if (!$this->isGranted('ROLE_ADMIN')) {
             $showActive = 1;
@@ -35,7 +37,7 @@ final class PizzaController extends AbstractController
         return $this->render('pizza/index.html.twig', [
             'pizzas' => $pizzaRepository->findByFilters($showActive, $sort, $direction),
             'pizzasSelect' => $pizzaRepository->findByFilters(1, 'price', 'asc'),
-            'services' => $pizzaServiceRepository->findAfterTomorrow(),
+            'services' => $services,
         ]);
     }
 

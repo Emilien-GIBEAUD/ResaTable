@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créneaux - {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}{% endblock %}
+
+{% block body %}
+    <h1>Créneau du service du {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Horaire</th>
+                <th>Durée</th>
+                <th>Capacité</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pizza_service_slot in pizza_service_slots %}
+            <tr>
+                <td>{{ pizza_service_slot.startTime ? pizza_service_slot.startTime|date('H:i') : '' }}</td>
+                <td>{{ pizza_service.slotDurationInMin }}</td>
+                <td>{{ pizza_service_slot.capacity }}</td>
+                <td>
+                    - +
+                    {# <a href="{{ path('app_slot_show', {'id': pizza_service_slot.id}) }}">show</a>
+                    <a href="{{ path('app_slot_edit', {'id': pizza_service_slot.id}) }}">edit</a> #}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+
+    {# <a href="{{ path('app_slot_new') }}">Create new</a> #}
+{% endblock %}

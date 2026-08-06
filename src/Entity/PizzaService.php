@@ -42,6 +42,7 @@ class PizzaService
      * @var Collection<int, PizzaServiceSlot>
      */
     #[ORM\OneToMany(targetEntity: PizzaServiceSlot::class, mappedBy: 'service', orphanRemoval: true)]
+    #[ORM\OrderBy(['startTime' => 'ASC'])]
     private Collection $pizzaServiceSlots;
 
     public function __construct()

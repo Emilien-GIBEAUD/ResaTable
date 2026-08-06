@@ -29,6 +29,7 @@
                 <td>
                     <a href="{{ path('app_pizza_service_show', {'id': pizza_service.id}) }}">Voir</a>
                     <a href="{{ path('app_pizza_service_edit', {'id': pizza_service.id}) }}">Modifier</a>
+                    <a href="{{ path('app_slot_show_services_slots', {'id': pizza_service.id}) }}">Créneaux</a>
                 </td>
             </tr>
         {% else %}
