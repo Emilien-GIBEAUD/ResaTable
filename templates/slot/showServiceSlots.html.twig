@@ -4,31 +4,46 @@
 
 {% block body %}
     <h1>Créneau du service du {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}</h1>
+    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Horaire</th>
                 <th>Durée</th>
+                <th>Réservations</th>
                 <th>Capacité</th>
-                <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for pizza_service_slot in pizza_service_slots %}
-            <tr>
+            <tr class="align-middle">
                 <td>{{ pizza_service_slot.startTime ? pizza_service_slot.startTime|date('H:i') : '' }}</td>
                 <td>{{ pizza_service.slotDurationInMin }}</td>
-                <td>{{ pizza_service_slot.capacity }}</td>
+                <td>... à venir ...</td>
                 <td>
-                    - +
-                    {# <a href="{{ path('app_slot_show', {'id': pizza_service_slot.id}) }}">show</a>
-                    <a href="{{ path('app_slot_edit', {'id': pizza_service_slot.id}) }}">edit</a> #}
+                    <span class="d-inline-flex align-items-center align-middle">
+                        <span class="ms-2 me-3">{{ pizza_service_slot.capacity }}</span>
+                        {% if pizza_service_slot.capacity > 0 %}
+                            <form   method="post" action="{{ path('app_slot_edit_capacity', { id: pizza_service_slot.id, action: 'decrease'}) }}"
+                                    class="d-inline-flex m-0">
+                                <button type="submit" class="btn p-1 border-0 lh-1">
+                                    <i class="bi bi-dash-circle fs-5 align-middle"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                        <form   method="post" action="{{ path('app_slot_edit_capacity', { id: pizza_service_slot.id, action: 'increase'}) }}"
+                                class="d-inline-flex m-0 ms-1">
+                            <button type="submit" class="btn p-1 border-0 lh-1">
+                                <i class="bi bi-plus-circle fs-5 align-middle"></i>
+                            </button>
+                        </form>
+                    </span>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="3">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

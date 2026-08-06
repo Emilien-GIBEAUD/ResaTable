@@ -1,15 +1,17 @@
 // Pizzas cart management in the booking form on the page /pizzas
 const addButton = document.getElementById('addPizza');
+const bookingButton = document.getElementById('addBooking');
 const pizza = document.getElementById('pizza');
 const quantity = document.getElementById('quantity');
 const cartBody = document.getElementById('cartBody');
 const noItems = document.getElementById('noItems');
 const capacityAlert = document.getElementById('capacityAlert');
+const capacityExceededAlert = document.getElementById('capacityExceededAlert');
 let nbItems = 0;
 let cartTotal = document.getElementById('cartTotal');
 let totalQuantity = 0;
 let cartTotalQuantity = document.getElementById('cartTotalQuantity');
-const maxQuantity = 5; // To be replaced with the booking slot max quantity
+let maxQuantity = 0; // To be replaced with the booking slot max quantity
 
 const serviceSelect = document.getElementById("serviceDate");
 const slotSelect = document.getElementById("serviceSlot");
@@ -22,10 +24,24 @@ serviceSelect.addEventListener("change", async function () {
     slots.forEach(slot => {
         const option = document.createElement("option");
         option.value = slot.id;
-        option.textContent = `${slot.startTime} (${slot.capacity} ${slot.capacity > 1 ? 'pizzas restantes' : 'place restante'})`;
+        option.dataset.capacity = slot.capacity;
+        option.textContent = `${slot.startTime} - ${slot.endTime} (${slot.capacity} ${slot.capacity > 1 ? 'pizzas restantes' : 'place restante'})`;
         slotSelect.appendChild(option);
     });
+
+    slotSelect.dispatchEvent(new Event("change"));
 });
+
+slotSelect.addEventListener("change", function () {
+    const selectedOption = this.options[this.selectedIndex];
+    maxQuantity = parseInt(selectedOption.dataset.capacity);
+    updateCapacityStatus();
+    // Adapt the cart if the total quantity exceeds the new maxQuantity
+    if (totalQuantity > maxQuantity) {
+        alert(`La capacité du créneau selectionné est dépassée, veuillez ajuster votre panier ou bien sélectionner un autre créneau pour pouvoir placer votre réservation.`);
+    }
+});
+
 serviceSelect.dispatchEvent(new Event("change"));
 
 addButton.addEventListener('click', () => {
@@ -143,19 +159,33 @@ function decreaseItem(row) {
 }
 
 function updateCapacityStatus() {
+    // Default state
+    bookingButton.hidden = false;
+    addButton.hidden = false;
+    capacityAlert.classList.add('d-none');
+    capacityExceededAlert.classList.add('d-none');
+
     const increaseButtons = document.querySelectorAll('.btnIncrease');
-    if (totalQuantity >= maxQuantity) {
+    increaseButtons.forEach(button => {
+        button.hidden = false;
+    });
+    
+    if (totalQuantity === maxQuantity) {
         increaseButtons.forEach(button => {
             button.hidden = true;
         });
         addButton.hidden = true;
-        capacityAlert.classList.remove('d-none'); // Show the capacity alert
-    } else {
+        capacityAlert.classList.remove('d-none');
+    }
+
+    if (totalQuantity > maxQuantity) {
         increaseButtons.forEach(button => {
-            button.hidden = false;
+            button.hidden = true;
         });
-        addButton.hidden = false;
-        capacityAlert.classList.add('d-none'); // Show the capacity alert
+        addButton.hidden = true;
+        bookingButton.hidden = true;
+        capacityAlert.classList.add('d-none');
+        capacityExceededAlert.classList.remove('d-none');
     }
 }
 
