@@ -1,27 +1,21 @@
 # Changelog
 
-## 0.2.0
-- Fonctionnalité créneau ( _**branch slot**_ )
-    - Crud des créneaux
-        - Ajout des créneaux lors de la création d'un service
-        - Suppression/recréation des créneaux lors de la modification d'un service
-        - Modification de la capacité d'un créneau (par l'admin)
-<br>
-- Fonctionnalité pizzas ( _**branch pizza**_ )
-    - Ajout des créneaux du service sélectionné dans le formulaire de réservation
-    - Gestion de la capacité des créneaux
-        - Alerte en cas de capacité dépassée (en cas de modification de créneau)
+## 0.3.0
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - Gestion de la réservation (/reservation/service/{id})
 <br>  
+- Fonctionnalité service de pizzas
+    - Tableau des services (/pizzas/service) plus concis
+<br>
+<br>
 
 [Voir les versions antérieures](#versions)
+<br>
 
 ## A venir dans les prochaines version <span style="font-size: 14px;">(non exhaustif)</span>
 <!-- NE PAS OUBLIER le fichier "TODO" pour les autres améliorations -->
-- Fonctionnalité créneau ( _**branch slot**_ )
-    - _Empêcher la mise à jour d'un service comportant des réservations_
-<br>
-- Fonctionnalité réservation ( _**branch booking**_ )
-    - _Gestion de la réservation_
+- Fonctionnalité créneau
+    - Empêcher la mise à jour d'un service comportant des réservations _--- A FAIRE ---_
 <br>
 - Fonctionnalité service de pizzas ( _**branch service**_ )
     - _Eviter les modèles et services non valide (début après fin, créneau > durée, ...)_
@@ -37,6 +31,19 @@
 
 
 ## Versions antérieures<a id="versions"></a>
+### 0.2.0
+---
+- Fonctionnalité créneau ( _**branch slot**_ )
+    - Crud des créneaux
+        - Ajout des créneaux lors de la création d'un service
+        - Suppression/recréation des créneaux lors de la modification d'un service
+        - Modification de la capacité d'un créneau (par l'admin)
+<br>
+- Fonctionnalité pizzas ( _**branch pizza**_ )
+    - Ajout des créneaux du service sélectionné dans le formulaire de réservation
+    - Gestion de la capacité des créneaux
+        - Alerte en cas de capacité dépassée (en cas de modification de créneau)
+
 ### 0.1.6
 ---
 - Fonctionnalité service de pizzas ( _**branch service**_ )
