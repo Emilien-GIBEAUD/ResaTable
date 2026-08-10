@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PizzaService;
+use App\Entity\PizzaServiceSlot;
 use App\Entity\Reservation;
 use App\Form\ReservationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,6 +31,14 @@ final class ReservationController extends AbstractController
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
+        $reservation->setStatus("PENDING");
+        $reservation->setAccessToken(bin2hex(random_bytes(32)));
+        $createdAt = new \DateTimeImmutable();
+        $reservation->setConfirmationExpiresAt($createdAt->modify('+15 minutes'));
+        $reservation->setCreatedAt($createdAt);
+        $slotId = $request->request->get('serviceSlot');
+        $slot = $entityManager->getRepository(PizzaServiceSlot::class)->find($slotId);
+        $reservation->setSlot($slot);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($reservation);

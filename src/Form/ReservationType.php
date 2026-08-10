@@ -18,21 +18,6 @@ class ReservationType extends AbstractType
             ->add('lastName')
             ->add('email')
             ->add('phone')
-            ->add('status')
-            ->add('accessToken')
-            ->add('confirmationExpiresAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('slot', EntityType::class, [
-                'class' => PizzaServiceSlot::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 

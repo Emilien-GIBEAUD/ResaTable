@@ -1,11 +1,13 @@
 # Changelog
 
-## 0.3.0
+## 0.3.1
 - Fonctionnalité réservation ( _**branch booking**_ )
-    - Gestion de la réservation (/reservation/service/{id})
-<br>  
-- Fonctionnalité service de pizzas
-    - Tableau des services (/pizzas/service) plus concis
+    - /reservation/new
+    - /reservation/{id}
+    - /reservation/{id}/edit
+<br>
+- Fonctionnalité pizzas
+    - Gestion de la capacité des créneaux avec prise en compte des réservations
 <br>
 <br>
 
@@ -31,6 +33,14 @@
 
 
 ## Versions antérieures<a id="versions"></a>
+### 0.3.0
+---
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - Gestion de la réservation (/reservation/service/{id})
+<br>  
+- Fonctionnalité service de pizzas
+    - Tableau des services (/pizzas/service) plus concis
+
 ### 0.2.0
 ---
 - Fonctionnalité créneau ( _**branch slot**_ )

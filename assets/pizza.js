@@ -22,11 +22,14 @@ serviceSelect.addEventListener("change", async function () {
 
     slotSelect.innerHTML = "";
     slots.forEach(slot => {
-        const option = document.createElement("option");
-        option.value = slot.id;
-        option.dataset.capacity = slot.capacity;
-        option.textContent = `${slot.startTime} - ${slot.endTime} (${slot.capacity} ${slot.capacity > 1 ? 'pizzas restantes' : 'place restante'})`;
-        slotSelect.appendChild(option);
+        const availableCapacity = slot.availableCapacity;
+        if (availableCapacity > 0) {
+            const option = document.createElement("option");
+            option.value = slot.id;
+            option.dataset.availableCapacity = availableCapacity;
+            option.textContent = `${slot.startTime} - ${slot.endTime} (${availableCapacity} ${availableCapacity > 1 ? 'pizzas restantes' : 'place restante'})`;
+            slotSelect.appendChild(option);
+        }
     });
 
     slotSelect.dispatchEvent(new Event("change"));
@@ -34,7 +37,7 @@ serviceSelect.addEventListener("change", async function () {
 
 slotSelect.addEventListener("change", function () {
     const selectedOption = this.options[this.selectedIndex];
-    maxQuantity = parseInt(selectedOption.dataset.capacity);
+    maxQuantity = parseInt(selectedOption.dataset.availableCapacity);
     updateCapacityStatus();
     // Adapt the cart if the total quantity exceeds the new maxQuantity
     if (totalQuantity > maxQuantity) {

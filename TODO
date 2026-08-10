@@ -1,11 +1,15 @@
-/pizzas
-
-
-/pizzas/service
+/reservation
+- implémenter un système d'option pour éviter les déconvenues visiteurs en cas de réservations simultanées.
 
 
 /templates/slot
 - ajouter créneau avant le premier ou après le dernier créneau d'un service
+
+
+/pizzas
+
+
+/pizzas/service
 
 
 Assets Mapper
