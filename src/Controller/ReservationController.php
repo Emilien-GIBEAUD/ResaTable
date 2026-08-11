@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\PizzaService;
 use App\Entity\PizzaServiceSlot;
 use App\Entity\Reservation;
+use App\Entity\ReservationItem;
 use App\Form\ReservationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,6 +32,9 @@ final class ReservationController extends AbstractController
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
+
+        // dump($form->getErrors(true, true));
+
         $reservation->setStatus("PENDING");
         $reservation->setAccessToken(bin2hex(random_bytes(32)));
         $createdAt = new \DateTimeImmutable();
@@ -40,17 +44,35 @@ final class ReservationController extends AbstractController
         $slot = $entityManager->getRepository(PizzaServiceSlot::class)->find($slotId);
         $reservation->setSlot($slot);
 
+        $items = $request->request->all('item');
+        foreach ($items as $pizzaId => $quantity) {
+            $pizza = $entityManager->getRepository(\App\Entity\Pizza::class)->find($pizzaId);
+            $reservationItem = new ReservationItem();
+            $reservationItem->setPizzaName($pizza->getName());
+            $reservationItem->setUnitPrice($pizza->getPrice());
+            $reservationItem->setQuantity($quantity);
+            $reservationItem->setReservation($reservation);
+            $entityManager->persist($reservationItem);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($reservation);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
+            // $entityManager->persist($reservation);
+            // // $entityManager->flush();
 
-        return $this->render('reservation/new.html.twig', [
-            'reservation' => $reservation,
-            'form' => $form,
-        ]);
+// dump($form->isSubmitted());
+// dump($form->isValid());
+// dump($request->request->all());
+
+return $this->redirectToRoute('app_pizza_service_index', [], Response::HTTP_SEE_OTHER);
+
+        // return $this->render('reservation/new.html.twig', [
+        //     'reservation' => $reservation,
+        //     'form' => $form,
+        // ]);
     }
 
     #[Route('/{id}', name: 'app_reservation_show', methods: ['GET'])]

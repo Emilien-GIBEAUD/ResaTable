@@ -29,6 +29,11 @@ final class PizzaController extends AbstractController
         $direction = $request->query->get('direction', 'asc');
         $services = $pizzaServiceRepository->findAfterTomorrow();
 
+        $csrfToken = $this->container
+            ->get('security.csrf.token_manager')
+            ->getToken('reservation')
+            ->getValue();
+
         if (!$this->isGranted('ROLE_ADMIN')) {
             $showActive = 1;
             $sort = 'price';
@@ -38,6 +43,7 @@ final class PizzaController extends AbstractController
             'pizzas' => $pizzaRepository->findByFilters($showActive, $sort, $direction),
             'pizzasSelect' => $pizzaRepository->findByFilters(1, 'price', 'asc'),
             'services' => $services,
+            'csrf_token' => $csrfToken,
         ]);
     }
 
@@ -50,9 +56,9 @@ final class PizzaController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-        $pizza->setCreatedAt(new \DateTimeImmutable());
+            $pizza->setCreatedAt(new \DateTimeImmutable());
 
-        $entityManager->persist($pizza);
+            $entityManager->persist($pizza);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_pizza_index', [], Response::HTTP_SEE_OTHER);

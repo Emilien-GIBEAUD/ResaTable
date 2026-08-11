@@ -51,6 +51,7 @@ addButton.addEventListener('click', () => {
     const option = pizza.options[pizza.selectedIndex];
     const name = option.dataset.name;
     const price = parseFloat(option.dataset.price);
+    const id = parseInt(option.value);
     let qty = parseInt(quantity.value);
     let totalToAdd = price * qty;
     const row = document.createElement('tr');
@@ -79,6 +80,7 @@ addButton.addEventListener('click', () => {
     }
 
     row.innerHTML = `
+        <input type="hidden" name="item[${id}]" value="${qty}">
         <td>${name}</td>
         <td class="quantity">${qty}</td>
         <td class="price">${price.toFixed(2)} €</td>
@@ -134,6 +136,7 @@ function increaseItem(row) {
     const currentQty = parseInt(row.querySelector('.quantity').textContent);
     const newQty = currentQty + 1;
     row.querySelector('.quantity').textContent = newQty;
+    row.querySelector('input').dataset.quantity = newQty;
     const unitPrice = parseFloat(row.querySelector('.price').textContent);
     const newTotal = parseFloat(row.querySelector('.price').textContent) * newQty;
     row.querySelector('.total').textContent = newTotal.toFixed(2) + ' €';
@@ -149,6 +152,7 @@ function decreaseItem(row) {
     const currentQty = parseInt(row.querySelector('.quantity').textContent);
     const newQty = currentQty - 1;
     row.querySelector('.quantity').textContent = newQty;
+    row.querySelector('input').dataset.quantity = newQty;
     const unitPrice = parseFloat(row.querySelector('.price').textContent);
     const newTotal = parseFloat(row.querySelector('.price').textContent) * newQty;
     row.querySelector('.total').textContent = newTotal.toFixed(2) + ' €';
