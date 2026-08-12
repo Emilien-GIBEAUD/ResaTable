@@ -1,5 +1,6 @@
 /reservation
-- implémenter un système d'option pour éviter les déconvenues visiteurs en cas de réservations simultanées.
+- Ajouter de quoi éviter plusieurs réservations simultanées sur le même créneau (actuellement, vérification juste avant le flush => risque faible mais toujours possible).
+- Implémenter un système d'option pour éviter les déconvenues visiteurs en cas de réservations simultanées.
 
 
 /templates/slot
