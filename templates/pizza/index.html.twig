@@ -121,15 +121,23 @@
                     <label class="form-label required" for="serviceDate">Nos services disponibles</label>
                     <select class="form-select" name="serviceDate" id="serviceDate">
                         {% for service in services %}
-                            <option value="{{ service.id }}">{{ service.serviceDate|format_datetime(pattern: 'EEEE d MMMM',locale: 'fr') }} ({{ service.template.startTime|date('H:i') }} - {{ service.template.endTime|date('H:i') }})</option>
+                            <option value="{{ service.id }}" {{ service.id == selectedService|default(0) ? 'selected' : '' }}>
+                                {{ service.serviceDate|format_datetime(pattern: 'EEEE d MMMM',locale: 'fr') }} 
+                                ({{ service.template.startTime|date('H:i') }} - 
+                                {{ service.template.endTime|date('H:i') }})
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4"> 
                     <label class="form-label required" for="serviceSlot">Choisissez votre horaire</label>
-                    <select class="form-select" name="serviceSlot" id="serviceSlot">
+                    <select     class="form-select" name="serviceSlot" id="serviceSlot" 
+                                data-selected-slot="{{ selectedSlot|default('') }}">
                         <!-- injected -->
                     </select>
+                    <script>
+                        const selectedSlot = "{{ selectedSlot|default('') }}";
+                    </script>
                 </div>
                 <hr class="my-2">
                 <h3>Votre panier</h3>
@@ -188,41 +196,34 @@
                 <div class="col-sm-6">
                     <label for="firstName" class="form-label">Prénom</label> 
                     <input type="text" class="form-control" id="firstName" name="reservation[firstName]" placeholder="Votre prénom" value="{{ reservationData.firstName|default('') }}" required="">
-                    <div class="invalid-feedback"><!-- A SUPPRIMER A PRIORI -->
-                        Un prénom valide est requis.
-                    </div>
                 </div>
                 <div class="col-sm-6">
                     <label for="lastName" class="form-label">Nom</label>
                     <input type="text" class="form-control" id="lastName" name="reservation[lastName]" placeholder="Votre nom" value="{{ reservationData.lastName|default('') }}" required="">
-                    <div class="invalid-feedback"><!-- A SUPPRIMER A PRIORI -->
-                        Un nom valide est requis.
-                    </div>
                 </div>
                 <div class="col-7">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="reservation[email]" placeholder="Votre email" value="{{ reservationData.email|default('') }}">
-                    <div class="invalid-feedback"><!-- A SUPPRIMER A PRIORI -->
-                        Veuillez entrer une adresse email valide.
-                    </div>
                 </div>
                 <div class="col-5">
                     <label for="phone" class="form-label">Téléphone</label>
                     <input type="tel" class="form-control" id="phone" name="reservation[phone]" placeholder="06... ou 07... uniquement" value="{{ reservationData.phone|default('') }}">
-                    <div class="invalid-feedback"><!-- A SUPPRIMER A PRIORI -->
-                        Veuillez entrer un numéro de téléphone valide.
-                    </div>
                 </div>
                 <hr class="my-4">
             </div>
             {% if errors is defined and errors|length > 0 %}
-                <div class="alert alert-danger">
+                <div class="alert alert-danger" id="errors">
                     <ul class="mb-0">
                         {% for error in errors %}
                             <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        document.getElementById('errors')?.scrollIntoView({ behavior: 'smooth' });
+                    });
+                </script>
             {% endif %}
             <input type="hidden" name="reservation[_token]" value="{{ csrf_token }}">
             <div class="d-flex justify-content-center">

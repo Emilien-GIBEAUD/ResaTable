@@ -35,13 +35,17 @@ final class ReservationController extends AbstractController
         #[CurrentUser] ?User $user,
         ): Response
     {
-        // Get request
+    // Get request
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
-        // Check inputs
+    // Check inputs
         $errors = [];
+        $items = $request->request->all('item');
+        if (empty($items)) {
+            $errors[] = 'Votre panier est vide. Veuillez sélectionner au moins une pizza.';
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             if ($user === null) {
             // Visitor
@@ -93,6 +97,8 @@ final class ReservationController extends AbstractController
                         ->getValue(),
                     'errors' => $errors,
                     'reservationData' => $request->request->all('reservation'),
+                    'selectedService' => $request->request->get('serviceDate'),
+                    'selectedSlot' => $request->request->get('serviceSlot'),
                 ]);
             }
 
@@ -108,7 +114,6 @@ final class ReservationController extends AbstractController
             $entityManager->persist($reservation);
 
         // Add items to reservation
-            $items = $request->request->all('item');
             $reservationQuantity = 0;
             foreach ($items as $pizzaId => $quantity) {
                 $pizza = $entityManager->getRepository(\App\Entity\Pizza::class)->find($pizzaId);
@@ -138,6 +143,7 @@ final class ReservationController extends AbstractController
                 $sort = 'price';
                 $direction = 'asc';
                 return $this->render('pizza/index.html.twig', [
+                    '_fragment' => 'errors',
                     'pizzas' => $pizzaRepository->findByFilters($showActive, $sort, $direction),
                     'pizzasSelect' => $pizzaRepository->findByFilters(1, 'price', 'asc'),
                     'services' => $pizzaServiceRepository->findAfterTomorrow(),
@@ -167,114 +173,6 @@ final class ReservationController extends AbstractController
         }
         return $this->redirectToRoute('app_home');  // que retourner ?
     }
-
-    // #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
-    // public function new(
-    //     Request $request, 
-    //     EntityManagerInterface $entityManager, 
-    //     PizzaRepository $pizzaRepository,
-    //     PizzaServiceRepository $pizzaServiceRepository,
-    //     #[CurrentUser] ?User $user,
-    //     ): Response
-    // {
-    //     // Get request and check inputs
-    //     $reservation = new Reservation();
-    //     $form = $this->createForm(ReservationType::class, $reservation);
-    //     $form->handleRequest($request);
-
-    //     $errors = [];
-    //     if ($user === null) {
-    //     // Visitor
-    //         if (
-    //             $form->get('email')->isEmpty() ||
-    //             $form->get('firstName')->isEmpty() || 
-    //             $form->get('lastName')->isEmpty() || 
-    //             $form->get('phone')->isEmpty()) 
-    //         {
-    //             $errors[] = 'Veuillez renseigner tous vos champs de coordonnées.';
-    //         }
-    //         if (!filter_var($form->get('email')->getData(), FILTER_VALIDATE_EMAIL)) {
-    //             $errors[] = 'Veuillez entrer une adresse email valide.';
-    //         }
-    //         $phoneCleaned = preg_replace('/\D/', '', $form->get('phone')->getData());
-    //         $regex = '/^0[67]\d{8}$/';
-    //         if (!preg_match($regex, $phoneCleaned)) {
-    //             $errors[] = 'Veuillez entrer un numéro de téléphone valide.';
-    //         }
-    //     } else {
-    //     // Admin
-    //         $inputNOK = $form->get('email')->isEmpty() && $form->get('firstName')->isEmpty() && $form->get('lastName')->isEmpty() && $form->get('phone')->isEmpty();
-    //         if ($inputNOK) {
-    //             $errors[] = 'Renseigner au moins un champ de coordonnées.';
-    //         }
-    //         if (!$form->get('email')->isEmpty() && !filter_var($form->get('email')->getData(), FILTER_VALIDATE_EMAIL)) {
-    //             $errors[] = 'L\'adresse email n\'est pas valide.';
-    //         }
-    //         if (!$form->get('phone')->isEmpty()) {
-    //             $phoneCleaned = preg_replace('/\D/', '', $form->get('phone')->getData());
-    //             $regex = '/^0[67]\d{8}$/';
-    //             if (!preg_match($regex, $phoneCleaned)) {
-    //                 $errors[] = 'Le numéro de téléphone n\'est pas valide.';
-    //             }
-    //         }
-    //     }
-
-    //     if (!empty($errors)) {
-    //         $showActive = 1;
-    //         $sort = 'price';
-    //         $direction = 'asc';
-    //         return $this->render('pizza/index.html.twig', [
-    //         'pizzas' => $pizzaRepository->findByFilters($showActive, $sort, $direction),
-    //         'pizzasSelect' => $pizzaRepository->findByFilters(1, 'price', 'asc'),
-    //         'services' => $pizzaServiceRepository->findAfterTomorrow(),
-    //         'csrf_token' => $this->container
-    //             ->get('security.csrf.token_manager')
-    //             ->getToken('reservation')
-    //             ->getValue(),
-    //         'errors' => $errors,
-    //         'reservationData' => $request->request->all('reservation'),
-    //         ]);
-    //     }
-
-    //     // Add reservation
-    //     $reservation->setStatus("PENDING");
-    //     $reservation->setAccessToken(bin2hex(random_bytes(32)));
-    //     $createdAt = new \DateTimeImmutable();
-    //     $reservation->setConfirmationExpiresAt($createdAt->modify('+15 minutes'));
-    //     $reservation->setCreatedAt($createdAt);
-    //     $slotId = $request->request->get('serviceSlot');
-    //     $slot = $entityManager->getRepository(PizzaServiceSlot::class)->find($slotId);
-    //     $reservation->setSlot($slot);
-
-    //     // Add items to reservation
-    //     $items = $request->request->all('item');
-    //     foreach ($items as $pizzaId => $quantity) {
-    //         $pizza = $entityManager->getRepository(\App\Entity\Pizza::class)->find($pizzaId);
-    //         $reservationItem = new ReservationItem();
-    //         $reservationItem->setPizzaName($pizza->getName());
-    //         $reservationItem->setUnitPrice($pizza->getPrice());
-    //         $reservationItem->setQuantity($quantity);
-    //         $reservationItem->setReservation($reservation);
-    //         $entityManager->persist($reservationItem);
-    //     }
-
-    //     if ($form->isSubmitted() && $form->isValid() && empty($errors)) {
-    //         $entityManager->persist($reservation);
-    //         // $entityManager->flush();
-    //         if ($user === null) {
-    //             // return $this->redirectToRoute('app_reservation_wait_confirmation', ['reservation' => $reservation,...], Response::HTTP_SEE_OTHER);    // route à faire
-    //             return $this->redirectToRoute('app_home');      // redirect fictif
-    //         }
-
-    //         $service = $reservation->getSlot()->getService();
-    //         $serviceSlots = $service->getPizzaServiceSlots();
-    //         return $this->redirectToRoute('app_pizza_service_index', [
-    //             'pizza_service' => $service,
-    //             'pizza_service_slots' => $serviceSlots,
-    //         ], Response::HTTP_SEE_OTHER);
-    //     }
-    //     return $this->redirectToRoute('app_home');  // que retourner ?
-    // }
 
     #[Route('/{id}', name: 'app_reservation_show', methods: ['GET'])]
     public function show(Reservation $reservation): Response

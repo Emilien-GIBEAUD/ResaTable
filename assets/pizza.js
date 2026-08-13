@@ -15,10 +15,12 @@ let maxQuantity = 0; // To be replaced with the booking slot max quantity
 
 const serviceSelect = document.getElementById("serviceDate");
 const slotSelect = document.getElementById("serviceSlot");
+const slotSlected = slotSelect.dataset.selectedSlot;
 
 serviceSelect.addEventListener("change", async function () {
     const response = await fetch(`/slot/serviceSlots/${this.value}/json`);
     const slots = await response.json();
+    console.log(slots);
 
     slotSelect.innerHTML = "";
     slots.forEach(slot => {
@@ -31,6 +33,13 @@ serviceSelect.addEventListener("change", async function () {
             slotSelect.appendChild(option);
         }
     });
+    if (slotSlected) {
+        if (slotSlected in slotSelect.options) {
+            slotSelect.value = slotSlected;
+        } else {
+            slotSelect.value = slotSelect.options[0].value;
+        }
+    }
 
     slotSelect.dispatchEvent(new Event("change"));
 });

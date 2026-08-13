@@ -16,8 +16,12 @@
 
 ## A venir dans les prochaines version <span style="font-size: 14px;">(non exhaustif)</span>
 <!-- NE PAS OUBLIER le fichier "TODO" pour les autres améliorations -->
-- Fonctionnalité créneau
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - Dissocier les erreurs en dispo, panier et coordonnées
+<br>
+- Fonctionnalité créneau ( _**branch slot**_ )
     - Empêcher la mise à jour d'un service comportant des réservations _--- A FAIRE ---_
+    - Empêcher la diminution de la capacité d'un créneau si les réservations en cours ne le permettent pas _--- A FAIRE ---_
 <br>
 - Fonctionnalité service de pizzas ( _**branch service**_ )
     - _Eviter les modèles et services non valide (début après fin, créneau > durée, ...)_
