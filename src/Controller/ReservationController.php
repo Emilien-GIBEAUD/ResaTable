@@ -84,6 +84,17 @@ final class ReservationController extends AbstractController
             }
 
             if (!empty($errors)) {
+                $formerItems = [];
+                foreach ($items as $pizzaId => $quantity) {
+                    $pizza = $pizzaRepository->find($pizzaId);
+                    $formerItems[] = [
+                        'id' => $pizzaId,
+                        'name' => $pizza->getName(),
+                        'price' => $pizza->getPrice(),
+                        'quantity' => (int) $quantity,
+                    ];
+                }
+
                 $showActive = 1;
                 $sort = 'price';
                 $direction = 'asc';
@@ -96,9 +107,10 @@ final class ReservationController extends AbstractController
                         ->getToken('reservation')
                         ->getValue(),
                     'errors' => $errors,
-                    'reservationData' => $request->request->all('reservation'),
+                    'formerItems' => $formerItems,
                     'selectedService' => $request->request->get('serviceDate'),
                     'selectedSlot' => $request->request->get('serviceSlot'),
+                    'reservationData' => $request->request->all('reservation'),
                 ]);
             }
 
@@ -139,11 +151,22 @@ final class ReservationController extends AbstractController
             }
             if ($reservationQuantity > $availableCapacity) {
                 $errors[] = "La capacité du créneau n'est plus disponible. Une réservation sur ce créneau vient d'être effectuée. Veuillez choisir un autre créneau.";
+
+                $formerItems = [];
+                foreach ($items as $pizzaId => $quantity) {
+                    $pizza = $pizzaRepository->find($pizzaId);
+                    $formerItems[] = [
+                        'id' => $pizzaId,
+                        'name' => $pizza->getName(),
+                        'price' => $pizza->getPrice(),
+                        'quantity' => (int) $quantity,
+                    ];
+                }
+
                 $showActive = 1;
                 $sort = 'price';
                 $direction = 'asc';
                 return $this->render('pizza/index.html.twig', [
-                    '_fragment' => 'errors',
                     'pizzas' => $pizzaRepository->findByFilters($showActive, $sort, $direction),
                     'pizzasSelect' => $pizzaRepository->findByFilters(1, 'price', 'asc'),
                     'services' => $pizzaServiceRepository->findAfterTomorrow(),
@@ -152,10 +175,13 @@ final class ReservationController extends AbstractController
                         ->getToken('reservation')
                         ->getValue(),
                     'errors' => $errors,
+                    'formerItems' => $formerItems,
+                    'selectedService' => $request->request->get('serviceDate'),
+                    'selectedSlot' => $request->request->get('serviceSlot'),
                     'reservationData' => $request->request->all('reservation'),
                 ]);
             }
-            // $entityManager->flush();
+            $entityManager->flush();
 
         // Redirect the visitor to the confirmation page
             if ($user === null) {
@@ -165,10 +191,8 @@ final class ReservationController extends AbstractController
 
         // Redirect the admin to the service slots page
             $service = $reservation->getSlot()->getService();
-            $serviceSlots = $service->getPizzaServiceSlots();
-            return $this->redirectToRoute('app_pizza_service_index', [
-                'pizza_service' => $service,
-                'pizza_service_slots' => $serviceSlots,
+            return $this->redirectToRoute('app_slot_show_services_slots', [
+                'id' => $service->getId(),
             ], Response::HTTP_SEE_OTHER);
         }
         return $this->redirectToRoute('app_home');  // que retourner ?

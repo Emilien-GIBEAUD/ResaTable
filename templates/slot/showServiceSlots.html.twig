@@ -16,23 +16,34 @@
             </tr>
         </thead>
         <tbody>
-        {% for pizza_service_slot in pizza_service_slots %}
+        {% for slot in pizza_service_slots %}
             <tr class="align-middle">
-                <td>{{ pizza_service_slot.startTime ? pizza_service_slot.startTime|date('H:i') : '' }}</td>
+                <td>{{ slot.startTime ? slot.startTime|date('H:i') : '' }}</td>
                 <td>{{ pizza_service.slotDurationInMin }}</td>
-                <td>... à venir ...</td>
+                {% set validReservations = slot.reservations|filter(
+                    reservation => reservation.status == 'PENDING' or reservation.status == 'CONFIRMED'
+                ) %}
+                {% set reservationPizzaCount = 0 %}
+                {% if validReservations|length > 0 %}
+                    {% for reservation in validReservations %}
+                        {% for item in reservation.reservationItems %}
+                            {% set reservationPizzaCount = reservationPizzaCount + item.quantity %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+                <td>{{ reservationPizzaCount }}</td>
                 <td>
                     <span class="d-inline-flex align-items-center align-middle">
-                        <span class="ms-2 me-3">{{ pizza_service_slot.capacity }}</span>
-                        {% if pizza_service_slot.capacity > 0 %}
-                            <form   method="post" action="{{ path('app_slot_edit_capacity', { id: pizza_service_slot.id, action: 'decrease'}) }}"
+                        <span class="ms-2 me-3">{{ slot.capacity }}</span>
+                        {% if slot.capacity > 0 and reservationPizzaCount < slot.capacity %}
+                            <form   method="post" action="{{ path('app_slot_edit_capacity', { id: slot.id, action: 'decrease'}) }}"
                                     class="d-inline-flex m-0">
                                 <button type="submit" class="btn p-1 border-0 lh-1">
                                     <i class="bi bi-dash-circle fs-5 align-middle"></i>
                                 </button>
                             </form>
                         {% endif %}
-                        <form   method="post" action="{{ path('app_slot_edit_capacity', { id: pizza_service_slot.id, action: 'increase'}) }}"
+                        <form   method="post" action="{{ path('app_slot_edit_capacity', { id: slot.id, action: 'increase'}) }}"
                                 class="d-inline-flex m-0 ms-1">
                             <button type="submit" class="btn p-1 border-0 lh-1">
                                 <i class="bi bi-plus-circle fs-5 align-middle"></i>

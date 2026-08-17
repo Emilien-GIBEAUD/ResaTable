@@ -5,7 +5,7 @@
 {% block body %}
 <div class="container">
     <h1>Nos Pizzas</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    {# <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
     <a href="/conditions">Voir les conditions</a>
 
     <hr class="my-4">
@@ -107,7 +107,7 @@
         </form>
 
         <a href="{{ path('app_pizza_new') }}">Créer une pizza</a>
-    {% endif %}
+    {% endif %} #}
 
     <hr class="my-4">
     <h2 class="mt-3">Notre service de réservation</h2>
@@ -155,12 +155,23 @@
                     </thead>
                     <tbody id="cartBody">
                         <tr id="noItems">
-                            <td colspan="6" class="text-muted">
+                            <td colspan="5" class="text-muted">
                                 Aucune pizza ajoutée.
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                {% if formerItems is defined and formerItems|length > 0 %}
+                    <div id="formerItems">
+                        {% for item in formerItems %}
+                            <input type="hidden" 
+                                    data-pizza_id="{{ item.id }}" 
+                                    data-quantity="{{ item.quantity }}" 
+                                    data-name="{{ item.name }}" 
+                                    data-price="{{ item.price }}">
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 <div class="text-end">
                     <span id="cartTotalQuantity">0</span> pizza(s) dans le panier. <br>
                     <strong>Total : <span id="cartTotal">0,00</span> €</strong>

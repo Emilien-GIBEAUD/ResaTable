@@ -36,16 +36,6 @@ class PizzaServiceRepository extends ServiceEntityRepository
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
-
-        // return $this->createQueryBuilder('p')
-        //     ->andWhere('p.serviceDate  >= :tomorrow')
-        //     ->setParameter('tomorrow', new \DateTimeImmutable('tomorrow'))
-        //     ->andWhere('p.bookingOpen = true')
-        //     ->orderBy('p.serviceDate', 'ASC')
-        //     ->setMaxResults(10)
-        //     ->getQuery()
-        //     ->getResult()
-        // ;
     }
 
 //    public function findOneBySomeField($value): ?PizzaService

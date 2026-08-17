@@ -3,8 +3,6 @@
 ## 0.3.1
 - Fonctionnalité réservation ( _**branch booking**_ )
     - /reservation/new
-    - /reservation/{id}
-    - /reservation/{id}/edit
 <br>
 - Fonctionnalité pizzas
     - Gestion de la capacité des créneaux avec prise en compte des réservations
@@ -17,6 +15,8 @@
 ## A venir dans les prochaines version <span style="font-size: 14px;">(non exhaustif)</span>
 <!-- NE PAS OUBLIER le fichier "TODO" pour les autres améliorations -->
 - Fonctionnalité réservation ( _**branch booking**_ )
+    - /reservation/{id}
+    - /reservation/{id}/edit
     - Dissocier les erreurs en dispo, panier et coordonnées
 <br>
 - Fonctionnalité créneau ( _**branch slot**_ )
