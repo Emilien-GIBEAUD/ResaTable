@@ -2,10 +2,11 @@
 
 ## 0.3.1
 - Fonctionnalité réservation ( _**branch booking**_ )
-    - /reservation/new
+    - /reservation/new (admin uniquement)
 <br>
 - Fonctionnalité pizzas
     - Gestion de la capacité des créneaux avec prise en compte des réservations
+    - Ajout d'un bouton pour masquer/afficher la carte (admin uniquement)
 <br>
 <br>
 

@@ -5,12 +5,19 @@
 {% block body %}
 <div class="container">
     <h1>Nos Pizzas</h1>
-    {# <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    <a href="/conditions">Voir les conditions</a>
+    {% if app.user === null %}
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <a href="/conditions">Voir les conditions</a>
 
-    <hr class="my-4">
-    <h2 class="mt-3">La carte</h2>
-    <table class="table">
+        <hr class="my-4">
+    {% endif %}
+    <h2 class="mt-3">La carte
+        {% if app.user %}
+            <button type="button" id="hideCardButton" class="btn">Masquer ▼</button>
+            <button type="button" id="displayCardButton" class="btn d-none">Afficher ▲</button>
+        {% endif %}
+    </h2>
+    <table class="table toHideCard">
         <thead>
             <tr>
                 <th>Nom <br>
@@ -95,7 +102,7 @@
     </table>
 
     {% if app.user %}
-        <form class="mb-2" method="get" onchange="this.submit()">
+        <form class="mb-2 toHideCard" method="get" onchange="this.submit()">
             <div>
                 <label for="showActive" class="required">Visibilité des pizzas</label>
                 <select name="showActive" id="showActive">
@@ -106,8 +113,8 @@
             </div>
         </form>
 
-        <a href="{{ path('app_pizza_new') }}">Créer une pizza</a>
-    {% endif %} #}
+        <a class="toHideCard" href="{{ path('app_pizza_new') }}">Créer une pizza</a>
+    {% endif %}
 
     <hr class="my-4">
     <h2 class="mt-3">Notre service de réservation</h2>
@@ -116,7 +123,7 @@
     {% else %}
         <form method="post" action="{{ path('app_reservation_new') }}" class="needs-validation" novalidate="">
             <div class="row g-3">
-                <h3>Nos disponibilités</h3>
+                <h4>Nos disponibilités</h4>
                 <div class="col-md-4"> 
                     <label class="form-label required" for="serviceDate">Nos services disponibles</label>
                     <select class="form-select" name="serviceDate" id="serviceDate">
@@ -139,11 +146,10 @@
                         const selectedSlot = "{{ selectedSlot|default('') }}";
                     </script>
                 </div>
+
                 <hr class="my-2">
-                <h3>Votre panier</h3>
-
-
-                <table class="table">
+                <h4>Votre panier</h4>
+                <table class="mt-1 table">
                     <thead>
                         <tr>
                             <th>Pizza</th>
@@ -201,9 +207,8 @@
                     <button type="button" id="addPizza" class="btn btn-primary">Ajouter au panier</button>
                 </div>
 
-
                 <hr class="my-2">
-                <h3>Vos coordonnées</h3>
+                <h4>Vos coordonnées</h4>
                 <div class="col-sm-6">
                     <label for="firstName" class="form-label">Prénom</label> 
                     <input type="text" class="form-control" id="firstName" name="reservation[firstName]" placeholder="Votre prénom" value="{{ reservationData.firstName|default('') }}" required="">

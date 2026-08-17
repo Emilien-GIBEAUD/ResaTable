@@ -115,10 +115,16 @@ final class ReservationController extends AbstractController
             }
 
         // Add reservation
-            $reservation->setStatus("PENDING");
-            $reservation->setAccessToken(bin2hex(random_bytes(32)));
             $createdAt = new \DateTimeImmutable();
-            $reservation->setConfirmationExpiresAt($createdAt->modify('+15 minutes'));
+            if ($user === null) {
+            // Visitor
+                $reservation->setStatus("PENDING");
+                $reservation->setAccessToken(bin2hex(random_bytes(32)));
+                $reservation->setConfirmationExpiresAt($createdAt->modify('+15 minutes'));
+            } else {
+            // Admin
+                $reservation->setStatus("CONFIRMED");
+            }
             $reservation->setCreatedAt($createdAt);
             $slotId = $request->request->get('serviceSlot');
             $slot = $entityManager->getRepository(PizzaServiceSlot::class)->find($slotId);
