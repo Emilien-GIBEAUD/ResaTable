@@ -21,7 +21,9 @@
                 <td>{{ slot.startTime ? slot.startTime|date('H:i') : '' }}</td>
                 <td>{{ pizza_service.slotDurationInMin }}</td>
                 {% set validReservations = slot.reservations|filter(
-                    reservation => reservation.status == 'PENDING' or reservation.status == 'CONFIRMED'
+                    reservation =>  (reservation.status == 'PENDING' 
+                                    and reservation.confirmationExpiresAt > date() )
+                                    or reservation.status == 'CONFIRMED'
                 ) %}
                 {% set reservationPizzaCount = 0 %}
                 {% if validReservations|length > 0 %}

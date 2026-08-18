@@ -120,7 +120,7 @@ final class ReservationController extends AbstractController
             // Visitor
                 $reservation->setStatus("PENDING");
                 $reservation->setAccessToken(bin2hex(random_bytes(32)));
-                $reservation->setConfirmationExpiresAt($createdAt->modify('+15 minutes'));
+                $reservation->setConfirmationExpiresAt($createdAt->modify('+30 minutes'));
             } else {
             // Admin
                 $reservation->setStatus("CONFIRMED");

@@ -22,20 +22,22 @@ const formerItems = document.getElementById("formerItems");
 const hideCardButton = document.getElementById("hideCardButton");
 const displayCardButton = document.getElementById("displayCardButton");
 const toHideCard = document.querySelectorAll(".toHideCard")
-hideCardButton.addEventListener("click", () => {
-    hideCardButton.classList.add('d-none');
-    displayCardButton.classList.remove('d-none');
-    toHideCard.forEach(item =>{
-        item.classList.add('d-none');
+if (hideCardButton) {
+    hideCardButton.addEventListener("click", () => {
+        hideCardButton.classList.add('d-none');
+        displayCardButton.classList.remove('d-none');
+        toHideCard.forEach(item =>{
+            item.classList.add('d-none');
+        })
     })
-})
-displayCardButton.addEventListener("click", () => {
-    hideCardButton.classList.remove('d-none');
-    displayCardButton.classList.add('d-none');
-    toHideCard.forEach(item =>{
-        item.classList.remove('d-none');
+    displayCardButton.addEventListener("click", () => {
+        hideCardButton.classList.remove('d-none');
+        displayCardButton.classList.add('d-none');
+        toHideCard.forEach(item =>{
+            item.classList.remove('d-none');
+        })
     })
-})
+}
 
 // Manage the service and slot selects
 serviceSelect.addEventListener("change", async function () {

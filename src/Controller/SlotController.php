@@ -59,7 +59,11 @@ final class SlotController extends AbstractController
                 $availableCapacity = $slot->getCapacity();
                 $reservations = $slot->getReservations();
                 foreach ($reservations as $reservation) {
-                    if ($reservation->getStatus() === 'CONFIRMED' || $reservation->getStatus() === 'PENDING') {
+                    if (
+                        $reservation->getStatus() === 'CONFIRMED' || 
+                        ($reservation->getStatus() === 'PENDING'
+                        && $reservation->getConfirmationExpiresAt() > new \DateTimeImmutable())
+                        ) {
                         $reservationItems = $reservation->getReservationItems();
                         foreach ($reservationItems as $item) {
                             $availableCapacity -= $item->getQuantity();
