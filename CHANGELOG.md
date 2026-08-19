@@ -1,10 +1,11 @@
 # Changelog
 [Lien vers le README de l'application](README.md)
-## 0.3.2
+
+## 0.3.3
 Date de la version : __/08/2026
 - Fonctionnalité réservation ( _**branch booking**_ )
-    - /reservation/new (opérationnel pour le visiteur)
-    - Ajout d'une commande de nettoyage du status de réservation (app:expire-reservations), _pour utilisation à l'aide d'un cron_
+    - Correction d'un bug en cas d'erreur lors d'une réservation : L'horaire sélectionnée n'était pas récupérée.
+    - Mise en place de la confirmation visiteur.
 <br>
 - Fonctionnalité pizzas
     - xxx
@@ -39,6 +40,13 @@ Date de la version : __/08/2026
 
 
 ## Versions antérieures<a id="versions"></a>
+### 0.3.2
+---
+Date de la version : 18/08/2026
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - /reservation/new (opérationnel pour le visiteur)
+    - Ajout d'une commande de nettoyage du status de réservation (app:expire-reservations), _pour utilisation à l'aide d'un cron_
+
 ### 0.3.1
 ---
 Date de la version : 17/08/2026

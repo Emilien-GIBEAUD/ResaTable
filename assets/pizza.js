@@ -15,9 +15,8 @@ let maxQuantity = 0; // To be replaced with the booking slot max quantity
 
 const serviceSelect = document.getElementById("serviceDate");
 const slotSelect = document.getElementById("serviceSlot");
-const slotSlected = slotSelect.dataset.selectedSlot;
+const slotSelected = slotSelect.dataset.selectedSlot;
 const formerItems = document.getElementById("formerItems");
-
 // Display/hide card (for admin only)
 const hideCardButton = document.getElementById("hideCardButton");
 const displayCardButton = document.getElementById("displayCardButton");
@@ -55,10 +54,10 @@ serviceSelect.addEventListener("change", async function () {
             slotSelect.appendChild(option);
         }
     });
-    if (slotSlected) {
-        if (slotSlected in slotSelect.options) {
-            slotSelect.value = slotSlected;
-        } else {
+// Manage former slot selected
+    if (slotSelected) {
+        slotSelect.value = slotSelected;
+        if (slotSelect.value === "") {
             slotSelect.value = slotSelect.options[0].value;
         }
     }

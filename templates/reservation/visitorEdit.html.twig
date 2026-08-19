@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre réservation{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Votre réservation</h1>
+    {% if confirmedNow is defined %}
+        <p class="alert alert-success">Votre réservation est maintenant confirmée !</p>
+    {% endif %}
+    <p>{{ reservation.email }}</p>
+</div>
+{% endblock %}
