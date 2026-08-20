@@ -230,35 +230,52 @@ final class ReservationController extends AbstractController
         }
 //
     #[Route('/visitor/{accessToken}', name: 'app_reservation_visitor_edit', methods: ['GET'])]
-    public function visitorEdit(string $accessToken, ReservationRepository $reservationRepository, EntityManagerInterface $entityManager): Response
+    public function visitorEdit(
+        string $accessToken, 
+        ReservationRepository $reservationRepository, 
+        EntityManagerInterface $entityManager
+        ): Response
         {
             $reservation = $reservationRepository->findOneBy(['accessToken' => $accessToken]);
+            if ($reservation === null) {
+                return $this->render('reservation/unknown.html.twig', []);
+            }
+
+            $now = new \DateTimeImmutable();
             $status = $reservation->getStatus();
-            if($status === "PENDING") {
-                $now = new \DateTimeImmutable();
-                if ($now < $reservation->getConfirmationExpiresAt()) {
+            if ($status === "PENDING") {
+                if ($now <= $reservation->getConfirmationExpiresAt()) {
                     $reservation->setStatus('CONFIRMED');
                     $entityManager->flush();
                     return $this->render('reservation/visitorEdit.html.twig', [
                         'reservation' => $reservation,
                         'confirmedNow' => true,
                     ]);
-                }else {
+                } else {
                     $reservation->setStatus('EXPIRED');
                     $entityManager->flush();
                 }
             }
 
+            $outdated = $reservation->getSlot()->getService()->getServiceDate()->modify('+1 day +2 hours');
+            if ($status === "CONFIRMED" && $now > $outdated) {
+                $reservation->setStatus('OUTDATED');
+                $entityManager->flush();
+            }
+
             $status = $reservation->getStatus();
-            if($status === "EXPIRED") {
-                return $this->render('reservation/reservationExpired.html.twig', [
+            if (
+                    $status === "CONFIRMED" ||
+                    $status === "EXPIRED" ||
+                    $status === "CANCELLED" ||
+                    $status === "OUTDATED"
+                ) {
+                return $this->render('reservation/visitorEdit.html.twig', [
                     'reservation' => $reservation,
                 ]);
             }
 
-            return $this->render('reservation/visitorEdit.html.twig', [
-                'reservation' => $reservation,
-            ]);
+            return $this->render('reservation/unknown.html.twig', []);
         }
 //
     #[IsGranted('ROLE_ADMIN')]

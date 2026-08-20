@@ -5,10 +5,8 @@
 Date de la version : __/08/2026
 - Fonctionnalité réservation ( _**branch booking**_ )
     - Correction d'un bug en cas d'erreur lors d'une réservation : L'horaire sélectionnée n'était pas récupérée.
-    - Mise en place de la confirmation visiteur.
-<br>
-- Fonctionnalité pizzas
-    - xxx
+    - Mise en place de la confirmation visiteur (pas encore de mail pour confirmation dans cette version).
+    - Gestion des 5 états de réservation (PENDING, EXPIRED, CONFIRMED, CANCELLED, OUTDATED).
 <br>
 <br>
 

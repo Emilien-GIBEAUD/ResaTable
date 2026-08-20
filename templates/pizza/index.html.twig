@@ -3,6 +3,7 @@
 {% block title %}Nos Pizzas{% endblock %}
 
 {% block body %}
+<main class="flex-grow-1 col-11 col-xl-10 mx-auto">
 <div class="container">
     <h1>Nos Pizzas</h1>
     {% if app.user === null %}
@@ -247,5 +248,6 @@
     {% endif %}
 
 </div>
+</main>
 {% endblock %}
 

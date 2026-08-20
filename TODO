@@ -8,12 +8,14 @@
 
 /templates/slot
 - ajouter créneau avant le premier ou après le dernier créneau d'un service
+- Empêcher les différentes midifications quand le service est passé
 
 
 /pizzas
 
 
 /pizzas/service
+- Empêcher les différentes midifications quand le service est passé
 
 
 Assets Mapper

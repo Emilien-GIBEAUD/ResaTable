@@ -3,15 +3,23 @@
 {% block title %}Réservation - {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}{% endblock %}
 
 {% block body %}
-    <h1>Réservation du service du {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}</h1>
+<main class="flex-grow-1 col-11 col-xl-10 mx-auto">
+<div class="container">
+    {% set outdated = pizza_service.serviceDate|date('Y-m-d') < date()|date('Y-m-d') %}
     <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
-        <p></p>
-    <hr class="mt-3 mb-1">
+    <h1>
+        Réservation du service du {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }} 
+        {{ outdated ? 
+        '<span class="badge bg-secondary ms-2 p-2 fs-5">SERVICE PASSÉ</span>' : 
+        '<span class="badge bg-success ms-2 p-2 fs-5">SERVICE À VENIR</span>' }}
+    </h1>
+    <hr class="mt-5 mb-1">
     {% for slot in pizza_service.pizzaServiceSlots %}
         {% set validReservations = slot.reservations|filter(
             reservation =>  (reservation.status == 'PENDING' 
                             and reservation.confirmationExpiresAt > date() )
                             or reservation.status == 'CONFIRMED'
+                            or reservation.status == 'OUTDATED'
         ) %}
         {% set reservationPizzaCount = 0 %}
         {% if validReservations|length > 0 %}
@@ -44,7 +52,9 @@
                     {{ reservation.firstName }} {{ reservation.lastName }} - {{ reservation.email }} - {{ reservation.phone }}
                     {{ reservation.status == 'PENDING' ? 
                         '<span class="badge bg-warning ms-5">ATTENTE CONFIRMATION</span>' : 
-                        '<span class="badge bg-success ms-5">CONFIRMÉ</span>' }} 
+                        outdated === true ? 
+                        '<span class="badge bg-secondary ms-5">PASSÉE</span>' : 
+                        '<span class="badge bg-success ms-5">CONFIRMÉE</span>'  }} 
                 </p>
                 <table class="table {{ reservationIndex < reservationCount ? 'mb-3' : 'mb-0' }}">
                     <thead>
@@ -72,4 +82,6 @@
     <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
 
     <a href="{{ path('app_reservation_new') }}">Create new</a>
+</div>
+</main>
 {% endblock %}
