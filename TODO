@@ -1,9 +1,6 @@
 /reservation
 - Ajouter de quoi éviter plusieurs réservations simultanées sur le même créneau (actuellement, vérification juste avant le flush => risque faible mais toujours possible).
 - Implémenter un système d'option pour éviter les déconvenues visiteurs en cas de réservations simultanées.
-- Bug quand réservation visiteur en erreur (découvert en prod)
-    premier service / deuxième créneau
-    retombe sur premier service / premier créneau
 
 
 /templates/slot
@@ -15,7 +12,7 @@
 
 
 /pizzas/service
-- Empêcher les différentes midifications quand le service est passé
+- Empêcher les différentes modifications quand le service est passé (Créneau : Twig ok, voir côté controlleur)
 
 
 Assets Mapper

@@ -6,7 +6,10 @@
 <main class="flex-grow-1 col-11 col-xl-10 mx-auto">
 <div class="container">
     {% set outdated = pizza_service.serviceDate|date('Y-m-d') < date()|date('Y-m-d') %}
-    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+    <div class="d-flex flex-column">
+        <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+        <a href="{{ path('app_slot_show_services_slots', {'id': pizza_service.id}) }}">voir les créneaux du service</a>
+    </div>
     <h1>
         Réservation du service du {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }} 
         {{ outdated ? 
@@ -79,9 +82,10 @@
         {% endif %}
         <hr class="mt-5 mb-1">
     {% endfor %}
-    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
-
-    <a href="{{ path('app_reservation_new') }}">Create new</a>
+    <div class="d-flex flex-column">
+        <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+        <a href="{{ path('app_slot_show_services_slots', {'id': pizza_service.id}) }}">voir les créneaux du service</a>
+    </div>
 </div>
 </main>
 {% endblock %}

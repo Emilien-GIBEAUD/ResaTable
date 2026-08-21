@@ -26,4 +26,18 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findConfirmedOutdated(\DateTimeImmutable $now): array
+    {
+        $now->format('Y-m-d');
+        return $this->createQueryBuilder('reservation')
+            ->join('reservation.slot', 'slot')
+            ->leftjoin('slot.service', 'service')
+            ->andWhere('reservation.status = :status')
+            ->andWhere('service.serviceDate < :now')
+            ->setParameter('status', 'CONFIRMED')
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->getResult();
+    }
 }
