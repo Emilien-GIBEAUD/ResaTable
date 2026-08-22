@@ -9,7 +9,7 @@
 
 
 /pizzas
-
+- Alerter sur l'impossibilité de confirmer une réservation si le mail fourni n'est pas valide.
 
 /pizzas/service
 - Empêcher les différentes modifications quand le service est passé (Créneau : Twig ok, voir côté controlleur)

@@ -1,18 +1,18 @@
 # Changelog
 [Lien vers le README de l'application](README.md)
 
-## 0.3.3
-Date de la version : 21/08/2026
+## 0.3.4
+Date de la version : __/08/2026
 - Fonctionnalité réservation ( _**branch booking**_ )
-    - Correction d'un bug en cas d'erreur lors d'une réservation : L'horaire sélectionnée n'était pas récupérée.
-    - Mise en place de la confirmation visiteur (pas encore de mail pour confirmation dans cette version).
-    - Gestion des 5 états de réservation (PENDING, EXPIRED, CONFIRMED, CANCELLED, OUTDATED).
-    - Ajout d'une commande de nettoyage du status de réservation (app:outdate-reservations), _pour utilisation à l'aide d'un cron_
+    - xxx
 <br> 
 - Fonctionnalité créneau
-    - Modification des créneaux de service passée plus disponible depuis la page /slot/serviceSlots/{id}
+    - xxx
 <br>
 <br>
+<br>
+
+_Il arrive que les notes de versions soient modifiées après coup (en cas d'oubli... , ou d'amélioration de la rédaction). Privilégier la lecture du commit le plus récent, y compris sur une branche autre que la branche "main"._  
 
 [Voir les versions antérieures](#versions)
 <br>
@@ -20,9 +20,12 @@ Date de la version : 21/08/2026
 ## A venir dans les prochaines version <span style="font-size: 14px;">(non exhaustif)</span>
 <!-- NE PAS OUBLIER le fichier "TODO" pour les autres améliorations -->
 - Fonctionnalité réservation ( _**branch booking**_ )
-    - /reservation/{id}
-    - /reservation/{id}/edit
-    - Dissocier les erreurs en dispo, panier et coordonnées
+    - Dissocier les erreurs en dispo, panier et coordonnées.
+    - Mise en place de l'envoi du mail de confirmation du visiteur
+    - /reservation/pending (pour le visiteur) à peaufiner.
+    - /reservation/visitor/{accessToken} (pour le visiteur) à peaufiner.
+    - /reservation/{id} (pour l'admin)
+    - /reservation/{id}/edit (pour l'admin)
 <br>
 - Fonctionnalité créneau ( _**branch slot**_ )
     - Empêcher la mise à jour d'un service comportant des réservations _--- A FAIRE ---_
@@ -42,6 +45,20 @@ Date de la version : 21/08/2026
 
 
 ## Versions antérieures<a id="versions"></a>
+### 0.3.3
+---
+Date de la version : 21/08/2026
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - Correction d'un bug en cas d'erreur lors d'une réservation : L'horaire sélectionnée n'était pas récupérée.
+    - Gestion des 5 états de réservation (PENDING, EXPIRED, CONFIRMED, CANCELLED, OUTDATED).
+    - Mise en place de la confirmation visiteur (pas encore de mail pour confirmation dans cette version).
+    - Mise en place de la page /reservation/pending suite à une réservation visiteur (à peaufiner).
+    - Mise en place de la page /reservation/visitor/{accessToken} suite à une réservation visiteur (à peaufiner).
+    - Ajout d'une commande de nettoyage du status de réservation (app:outdate-reservations), _pour utilisation à l'aide d'un cron_
+<br> 
+- Fonctionnalité créneau
+    - Modification des créneaux de service passée plus disponibles depuis la page /slot/serviceSlots/{id}
+
 ### 0.3.2
 ---
 Date de la version : 18/08/2026
