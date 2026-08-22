@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre réservation{% endblock %}
+
+{% block body %}
+<main class="flex-grow-1 col-11 col-xl-9 mx-auto">
+<div class="container">
+    <h1>
+        Votre réservation
+        {{ reservation.status == 'PENDING' ? 
+            '<span class="badge bg-warning ms-2 p-2 fs-5">ATTENTE CONFIRMATION</span>' : 
+            reservation.status == 'OUTDATED' 
+                or reservation.status == 'CONFIRMED' 
+                and reservation.slot.service.serviceDate|date('Y-m-d') < date()|date('Y-m-d') ? 
+            '<span class="badge bg-secondary ms-2 p-2 fs-5">RÉSERVATION PASSÉE</span>' : 
+            reservation.status == 'EXPIRED' 
+                or reservation.status == 'PENDING' 
+                and reservation.confirmationExpiresAt > date() ? 
+            '<span class="badge bg-danger ms-2 p-2 fs-5">RÉSERVATION EXPIRÉE</span>' : 
+            reservation.status == 'CANCELLED' ? 
+            '<span class="badge bg-danger ms-2 p-2 fs-5">RÉSERVATION ANNULÉE</span>' : 
+            '<span class="badge bg-success ms-2 p-2 fs-5">RÉSERVATION CONFIRMÉE</span>' }} 
+    </h1>
+    {% if confirmedNow is defined %}
+        <p class="alert alert-success">Votre réservation est maintenant confirmée !</p>
+    {% endif %}
+    <div class="row g-3">
+        <h2 class="mt-4 mb-0">Rappel de votre réservation</h2>
+        <h4 class="my-2">Vos coordonnées</h4>
+        <div class="mt-0 col-md-3 col-sm-6"> 
+            <h6 class="my-0">Prénom</h6> 
+            <p class="mb-0 text-body-secondary">{{ reservation.firstName }}</p> 
+        </div>
+        <div class="mt-0 col-md-3 col-sm-6"> 
+            <h6 class="my-0">Nom</h6> 
+            <p class="mb-0 text-body-secondary">{{ reservation.lastName }}</p> 
+        </div>
+        <div class="mt-0 col-md-4 col-sm-7"> 
+            <h6 class="my-0">email</h6> 
+            <p class="mb-0 text-body-secondary">{{ reservation.email }}</p> 
+        </div>
+        <div class="mt-0 col-md-2 col-sm-5"> 
+            <h6 class="my-0">téléphone</h6> 
+            <p class="mb-0 text-body-secondary">{{ reservation.phone }}</p> 
+        </div>
+
+        <hr class="mt-4 mb-1">
+        <h4 class="mt-0">Votre date de réservation</h4>
+        <div class="mt-0 col-md-5 col-sm-6"> 
+            <h6 class="my-0">Service</h6> 
+            <p class="mb-0 text-body-secondary">{{ reservation.slot.service.serviceDate|format_datetime(pattern: 'EEEE d MMMM',locale: 'fr') }}</p> 
+        </div>
+        <div class="mt-0 col-md-5 col-sm-6"> 
+            <h6 class="my-0">Horaire</h6> 
+            <p class="mb-0 text-body-secondary">{{ reservation.slot.startTime|date('H:i') }}</p> 
+        </div>
+
+        <hr class="mt-4 mb-1">
+        <h4 class="mt-0">Votre réservation</h4>
+        <table class="my-1 table">
+            <thead>
+                <tr>
+                    <th>Pizza</th>
+                    <th>Qtt</th>
+                    <th>Prix unit.</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set cartTotal = 0 %}
+                {% for item in reservation.reservationItems %}
+                    <tr class="align-middle">
+                        <td>{{ item.pizzaName }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.unitPrice }}</td>
+                        <td>{{ (item.quantity * item.unitPrice)|number_format(2) }}</td>
+                        {% set cartTotal = cartTotal + item.quantity * item.unitPrice %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-1 mb-5 text-end">
+            <strong>Total : <span id="cartTotal">{{ cartTotal|number_format(2) }}</span> €</strong>
+        </div>
+    </div>
+</div>
+</main>
+{% endblock %}

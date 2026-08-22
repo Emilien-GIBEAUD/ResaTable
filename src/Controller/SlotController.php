@@ -56,11 +56,25 @@ final class SlotController extends AbstractController
         foreach ($serviceSlots as $slot) {
             if ($slot->getCapacity() > 0) {
                 $endTime = $slot->getStartTime()->modify('+' . $service->getSlotDurationInMin() . ' minutes');
+                $availableCapacity = $slot->getCapacity();
+                $reservations = $slot->getReservations();
+                foreach ($reservations as $reservation) {
+                    if (
+                        $reservation->getStatus() === 'CONFIRMED' || 
+                        ($reservation->getStatus() === 'PENDING'
+                        && $reservation->getConfirmationExpiresAt() > new \DateTimeImmutable())
+                        ) {
+                        $reservationItems = $reservation->getReservationItems();
+                        foreach ($reservationItems as $item) {
+                            $availableCapacity -= $item->getQuantity();
+                        }
+                    }
+                }
                 $data[] = [
                     'id' => $slot->getId(),
                     'startTime' => $slot->getStartTime()->format('H:i'),
                     'endTime' => $endTime->format('H:i'),
-                    'capacity' => $slot->getCapacity(),
+                    'availableCapacity' => $availableCapacity,
                 ];
             }
         }

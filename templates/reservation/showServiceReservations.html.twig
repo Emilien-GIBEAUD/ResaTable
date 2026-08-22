@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation - {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}{% endblock %}
+
+{% block body %}
+<main class="flex-grow-1 col-11 col-xl-10 mx-auto">
+<div class="container">
+    {% set outdated = pizza_service.serviceDate|date('Y-m-d') < date()|date('Y-m-d') %}
+    <div class="d-flex flex-column">
+        <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+        <a href="{{ path('app_slot_show_services_slots', {'id': pizza_service.id}) }}">voir les créneaux du service</a>
+    </div>
+    <h1>
+        Réservation du service du {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }} 
+        {{ outdated ? 
+        '<span class="badge bg-secondary ms-2 p-2 fs-5">SERVICE PASSÉ</span>' : 
+        '<span class="badge bg-success ms-2 p-2 fs-5">SERVICE À VENIR</span>' }}
+    </h1>
+    <hr class="mt-5 mb-1">
+    {% for slot in pizza_service.pizzaServiceSlots %}
+        {% set validReservations = slot.reservations|filter(
+            reservation =>  (reservation.status == 'PENDING' 
+                            and reservation.confirmationExpiresAt > date() )
+                            or reservation.status == 'CONFIRMED'
+                            or reservation.status == 'OUTDATED'
+        ) %}
+        {% set reservationPizzaCount = 0 %}
+        {% if validReservations|length > 0 %}
+            {% for reservation in validReservations %}
+                {% for item in reservation.reservationItems %}
+                    {% set reservationPizzaCount = reservationPizzaCount + item.quantity %}
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        
+        <h3>
+            {{ slot.startTime|date('H:i') }} - 
+            {{ slot.startTime|date_modify('+' ~ pizza_service.slotDurationInMin ~ ' minutes')|date('H:i') }} 
+            {% if slot.capacity === 0 %}
+            <span class="ms-5">(0 pizza dispo.)</span>
+            {% elseif slot.capacity === reservationPizzaCount + 1 %}
+                <span class="ms-5">({{ slot.capacity - reservationPizzaCount }} pizza dispo.)</span>
+            {% elseif slot.capacity > reservationPizzaCount + 1 %}
+                <span class="ms-5">({{ slot.capacity - reservationPizzaCount }} pizzas dispo.)</span>
+            {% else %}
+                <span class="badge bg-danger ms-5">COMPLET</span>
+            {% endif %}
+        </h3>
+        {% set reservationCount = validReservations|length %}
+        {% set reservationIndex = 0 %}
+        {% if validReservations|length > 0 %}
+            {% for reservation in validReservations %}
+                {% set reservationIndex = reservationIndex + 1 %}
+                <p class="fw-bold mb-1">
+                    {{ reservation.firstName }} {{ reservation.lastName }} - {{ reservation.email }} - {{ reservation.phone }}
+                    {{ reservation.status == 'PENDING' ? 
+                        '<span class="badge bg-warning ms-5">ATTENTE CONFIRMATION</span>' : 
+                        outdated === true ? 
+                        '<span class="badge bg-secondary ms-5">PASSÉE</span>' : 
+                        '<span class="badge bg-success ms-5">CONFIRMÉE</span>'  }} 
+                </p>
+                <table class="table {{ reservationIndex < reservationCount ? 'mb-3' : 'mb-0' }}">
+                    <thead>
+                        <tr>
+                            <th>Pizza</th>
+                            <th>Quantité</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in reservation.reservationItems %}
+                            {% set reservationPizzaCount = reservationPizzaCount + item.quantity %}
+                            <tr class="align-middle">
+                                <td>{{ item.pizzaName }}</td>
+                                <td>{{ item.quantity }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        {% else %}
+            Aucune réservation
+        {% endif %}
+        <hr class="mt-5 mb-1">
+    {% endfor %}
+    <div class="d-flex flex-column">
+        <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+        <a href="{{ path('app_slot_show_services_slots', {'id': pizza_service.id}) }}">voir les créneaux du service</a>
+    </div>
+</div>
+</main>
+{% endblock %}

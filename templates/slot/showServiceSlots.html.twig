@@ -3,10 +3,21 @@
 {% block title %}Créneaux - {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}{% endblock %}
 
 {% block body %}
-    <h1>Créneau du service du {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}</h1>
-    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+<main class="flex-grow-1 col-11 col-xl-8 mx-auto">
+<div class="container">
+    {% set outdated = pizza_service.serviceDate|date('Y-m-d') < date()|date('Y-m-d') %}
+    <div class="d-flex flex-column">
+        <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+        <a href="{{ path('app_reservation_service', {'id': pizza_service.id}) }}">voir les réservations du service</a>
+    </div>
+    <h1>
+        Créneau du service du {{ pizza_service.serviceDate|format_datetime(pattern: 'd MMMM',locale: 'fr') }}
+        {{ outdated ? 
+        '<span class="badge bg-secondary ms-2 p-2 fs-5">SERVICE PASSÉ</span>' : 
+        '<span class="badge bg-success ms-2 p-2 fs-5">SERVICE À VENIR</span>' }}
+    </h1>
 
-    <table class="table">
+    <table class="table mt-4">
         <thead>
             <tr>
                 <th>Horaire</th>
@@ -16,28 +27,44 @@
             </tr>
         </thead>
         <tbody>
-        {% for pizza_service_slot in pizza_service_slots %}
+        {% for slot in pizza_service_slots %}
             <tr class="align-middle">
-                <td>{{ pizza_service_slot.startTime ? pizza_service_slot.startTime|date('H:i') : '' }}</td>
+                <td>{{ slot.startTime ? slot.startTime|date('H:i') : '' }}</td>
                 <td>{{ pizza_service.slotDurationInMin }}</td>
-                <td>... à venir ...</td>
+                {% set validReservations = slot.reservations|filter(
+                    reservation =>  (reservation.status == 'PENDING' 
+                                    and reservation.confirmationExpiresAt > date() )
+                                    or reservation.status == 'CONFIRMED'
+                                    or reservation.status == 'OUTDATED'
+                ) %}
+                {% set reservationPizzaCount = 0 %}
+                {% if validReservations|length > 0 %}
+                    {% for reservation in validReservations %}
+                        {% for item in reservation.reservationItems %}
+                            {% set reservationPizzaCount = reservationPizzaCount + item.quantity %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+                <td>{{ reservationPizzaCount }}</td>
                 <td>
                     <span class="d-inline-flex align-items-center align-middle">
-                        <span class="ms-2 me-3">{{ pizza_service_slot.capacity }}</span>
-                        {% if pizza_service_slot.capacity > 0 %}
-                            <form   method="post" action="{{ path('app_slot_edit_capacity', { id: pizza_service_slot.id, action: 'decrease'}) }}"
-                                    class="d-inline-flex m-0">
+                        <span class="ms-2 me-3">{{ slot.capacity }}</span>
+                        {% if outdated === false %}
+                            {% if slot.capacity > 0 and reservationPizzaCount < slot.capacity %}
+                                <form   method="post" action="{{ path('app_slot_edit_capacity', { id: slot.id, action: 'decrease'}) }}"
+                                        class="d-inline-flex m-0">
+                                    <button type="submit" class="btn p-1 border-0 lh-1">
+                                        <i class="bi bi-dash-circle fs-5 align-middle"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                            <form   method="post" action="{{ path('app_slot_edit_capacity', { id: slot.id, action: 'increase'}) }}"
+                                    class="d-inline-flex m-0 ms-1">
                                 <button type="submit" class="btn p-1 border-0 lh-1">
-                                    <i class="bi bi-dash-circle fs-5 align-middle"></i>
+                                    <i class="bi bi-plus-circle fs-5 align-middle"></i>
                                 </button>
                             </form>
                         {% endif %}
-                        <form   method="post" action="{{ path('app_slot_edit_capacity', { id: pizza_service_slot.id, action: 'increase'}) }}"
-                                class="d-inline-flex m-0 ms-1">
-                            <button type="submit" class="btn p-1 border-0 lh-1">
-                                <i class="bi bi-plus-circle fs-5 align-middle"></i>
-                            </button>
-                        </form>
                     </span>
                 </td>
             </tr>
@@ -49,7 +76,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
-
-    {# <a href="{{ path('app_slot_new') }}">Create new</a> #}
+    <div class="d-flex flex-column">
+        <a href="{{ path('app_pizza_service_index') }}">retour à la liste des services</a>
+        <a href="{{ path('app_reservation_service', {'id': pizza_service.id}) }}">voir les réservations du service</a>
+    </div>
+</div>
+</main>
 {% endblock %}

@@ -1,27 +1,32 @@
 # Changelog
+[Lien vers le README de l'application](README.md)
 
-## 0.2.0
-- Fonctionnalité créneau ( _**branch slot**_ )
-    - Crud des créneaux
-        - Ajout des créneaux lors de la création d'un service
-        - Suppression/recréation des créneaux lors de la modification d'un service
-        - Modification de la capacité d'un créneau (par l'admin)
+## 0.3.3
+Date de la version : 21/08/2026
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - Correction d'un bug en cas d'erreur lors d'une réservation : L'horaire sélectionnée n'était pas récupérée.
+    - Mise en place de la confirmation visiteur (pas encore de mail pour confirmation dans cette version).
+    - Gestion des 5 états de réservation (PENDING, EXPIRED, CONFIRMED, CANCELLED, OUTDATED).
+    - Ajout d'une commande de nettoyage du status de réservation (app:outdate-reservations), _pour utilisation à l'aide d'un cron_
+<br> 
+- Fonctionnalité créneau
+    - Modification des créneaux de service passée plus disponible depuis la page /slot/serviceSlots/{id}
 <br>
-- Fonctionnalité pizzas ( _**branch pizza**_ )
-    - Ajout des créneaux du service sélectionné dans le formulaire de réservation
-    - Gestion de la capacité des créneaux
-        - Alerte en cas de capacité dépassée (en cas de modification de créneau)
-<br>  
+<br>
 
 [Voir les versions antérieures](#versions)
+<br>
 
 ## A venir dans les prochaines version <span style="font-size: 14px;">(non exhaustif)</span>
 <!-- NE PAS OUBLIER le fichier "TODO" pour les autres améliorations -->
-- Fonctionnalité créneau ( _**branch slot**_ )
-    - _Empêcher la mise à jour d'un service comportant des réservations_
-<br>
 - Fonctionnalité réservation ( _**branch booking**_ )
-    - _Gestion de la réservation_
+    - /reservation/{id}
+    - /reservation/{id}/edit
+    - Dissocier les erreurs en dispo, panier et coordonnées
+<br>
+- Fonctionnalité créneau ( _**branch slot**_ )
+    - Empêcher la mise à jour d'un service comportant des réservations _--- A FAIRE ---_
+    - Empêcher la diminution de la capacité d'un créneau si les réservations en cours ne le permettent pas _--- A FAIRE ---_
 <br>
 - Fonctionnalité service de pizzas ( _**branch service**_ )
     - _Eviter les modèles et services non valide (début après fin, créneau > durée, ...)_
@@ -37,8 +42,49 @@
 
 
 ## Versions antérieures<a id="versions"></a>
+### 0.3.2
+---
+Date de la version : 18/08/2026
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - /reservation/new (opérationnel pour le visiteur)
+    - Ajout d'une commande de nettoyage du status de réservation (app:expire-reservations), _pour utilisation à l'aide d'un cron_
+
+### 0.3.1
+---
+Date de la version : 17/08/2026
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - /reservation/new (admin uniquement)
+<br>
+- Fonctionnalité pizzas
+    - Gestion de la capacité des créneaux avec prise en compte des réservations
+    - Ajout d'un bouton pour masquer/afficher la carte (admin uniquement)
+
+### 0.3.0
+---
+Date de la version : 09/08/2026
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - Gestion de la réservation (/reservation/service/{id})
+<br>  
+- Fonctionnalité service de pizzas
+    - Tableau des services (/pizzas/service) plus concis
+
+### 0.2.0
+---
+Date de la version : 06/08/2026
+- Fonctionnalité créneau ( _**branch slot**_ )
+    - Crud des créneaux
+        - Ajout des créneaux lors de la création d'un service
+        - Suppression/recréation des créneaux lors de la modification d'un service
+        - Modification de la capacité d'un créneau (par l'admin)
+<br>
+- Fonctionnalité pizzas ( _**branch pizza**_ )
+    - Ajout des créneaux du service sélectionné dans le formulaire de réservation
+    - Gestion de la capacité des créneaux
+        - Alerte en cas de capacité dépassée (en cas de modification de créneau)
+
 ### 0.1.6
 ---
+Date de la version : 01/08/2026
 - Fonctionnalité service de pizzas ( _**branch service**_ )
     - Modification des données de service
         - Modèles ne servant plus que lors de la création (relation conservée à titre informatif)
@@ -47,6 +93,7 @@
 
 ### 0.1.5
 ---
+Date de la version : 31/07/2026
 - Fonctionnalité pizzas ( _**branch pizza**_ )
     - Suppression des pizzas non visibles dans le formulaire de réservation pour l'admin
     - Mise à jour mineure sur les entêtes des colonnes du panier
@@ -59,6 +106,7 @@
 
 ### 0.1.4
 ---
+Date de la version : 29/07/2026
 - Fonctionnalité pizzas ( _**branch pizza**_ )
     - Correction/amélioration du fonctionnement du panier quand qtt max atteinte
         - Désactivation du bouton "Ajouter au panier"
@@ -68,6 +116,7 @@
 
 ### 0.1.3
 ---
+Date de la version : 26/07/2026
 - Fonctionnalité pizzas ( _**branch pizza**_ )
     - Ajout des services disponibles et du formulaire de réservation (sous la liste des pizzas)
 <br>
@@ -76,6 +125,7 @@
 
 ### 0.1.2
 ---
+Date de la version : 25/07/2026
 - Fonctionnalité service de pizzas ( _**branch service**_ )
     - CRUD des services
     - Accès aux fonctionnalités depuis un sous-menu de la navbar
@@ -88,11 +138,13 @@
 
 ### 0.1.1
 ---
+Date de la version : 23/07/2026
 - Fonctionnalité service de pizzas  
 _Ajout d'un lien provisoire vers la fonctionnalité (/service/template) depuis /pizzas_
 
 ### 0.1.0
 ---
+Date de la version : 23/07/2026
 - Début de l'ajout de la fonctionnalité service de pizzas (admin connecté uniquement) 
     - CRUD des modèles de service
 
@@ -101,10 +153,12 @@ Les services sont créés à l'aide de modèles de service
 
 ### 0.0.8
 ---
+Date de la version : 23/07/2026
 - Correction d'un bug sur le checkbox "visible" qui ne pouvait être décoché (Ajout/modification des pizzas)
 
 ### 0.0.8
 ---
+Date de la version : 23/07/2026
 - Ajout/modification/suppression des pizzas (admin connecté uniquement)
 - Vue de la liste des pizzas
 - Pas de styles Bootstrap dans cette version  
@@ -114,32 +168,39 @@ version non disponnible sur DockerHub, écrasée par la correction suivante qui 
 
 ### 0.0.7
 ---
+Date de la version : 23/07/2026
 - Mise à jour du message renvoyé en cas de mot de passe erroné
 
 ### 0.0.6
 ---
+Date de la version : 23/07/2026
 - Correction d'affichage de la police pour les mobiles
 
 ### 0.0.5
 ---
+Date de la version : 23/07/2026
 - Mise à jour du déploiement automatique
 
 ### 0.0.4
 ---
+Date de la version : 23/07/2026
 - Mise à jour du header avec ajout d'un menu burger
 - Mise à jour du footer
 - Ajout de conditions sur la force du mot de passe (depuis l'interface graphique et depuis la CLI)
 
 ### 0.0.3
 ---
+Date de la version : 13/07/2026
 - Ajout d'un header avec son menu (non finalisé)
 - Ajout d'un footer (non finalisé)
 
 ### 0.0.2
 ---
+Date de la version : 13/07/2026
 - Test du Changelog
 
 ### 0.0.1
 ---
+Date de la version : 13/07/2026
 - Première version de production
 

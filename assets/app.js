@@ -10,4 +10,3 @@ import 'bootstrap';
 import './color-modes.js';
 import './pizza.js';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

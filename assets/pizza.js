@@ -15,39 +15,126 @@ let maxQuantity = 0; // To be replaced with the booking slot max quantity
 
 const serviceSelect = document.getElementById("serviceDate");
 const slotSelect = document.getElementById("serviceSlot");
+const slotSelected = slotSelect.dataset.selectedSlot;
+const formerItems = document.getElementById("formerItems");
+// Display/hide card (for admin only)
+const hideCardButton = document.getElementById("hideCardButton");
+const displayCardButton = document.getElementById("displayCardButton");
+const toHideCard = document.querySelectorAll(".toHideCard")
+if (hideCardButton) {
+    hideCardButton.addEventListener("click", () => {
+        hideCardButton.classList.add('d-none');
+        displayCardButton.classList.remove('d-none');
+        toHideCard.forEach(item =>{
+            item.classList.add('d-none');
+        })
+    })
+    displayCardButton.addEventListener("click", () => {
+        hideCardButton.classList.remove('d-none');
+        displayCardButton.classList.add('d-none');
+        toHideCard.forEach(item =>{
+            item.classList.remove('d-none');
+        })
+    })
+}
 
+// Manage the service and slot selects
 serviceSelect.addEventListener("change", async function () {
     const response = await fetch(`/slot/serviceSlots/${this.value}/json`);
     const slots = await response.json();
 
     slotSelect.innerHTML = "";
     slots.forEach(slot => {
-        const option = document.createElement("option");
-        option.value = slot.id;
-        option.dataset.capacity = slot.capacity;
-        option.textContent = `${slot.startTime} - ${slot.endTime} (${slot.capacity} ${slot.capacity > 1 ? 'pizzas restantes' : 'place restante'})`;
-        slotSelect.appendChild(option);
+        const availableCapacity = slot.availableCapacity;
+        if (availableCapacity > 0) {
+            const option = document.createElement("option");
+            option.value = slot.id;
+            option.dataset.availableCapacity = availableCapacity;
+            option.textContent = `${slot.startTime} - ${slot.endTime} (${availableCapacity} ${availableCapacity > 1 ? 'pizzas restantes' : 'place restante'})`;
+            slotSelect.appendChild(option);
+        }
     });
+// Manage former slot selected
+    if (slotSelected) {
+        slotSelect.value = slotSelected;
+        if (slotSelect.value === "") {
+            slotSelect.value = slotSelect.options[0].value;
+        }
+    }
 
     slotSelect.dispatchEvent(new Event("change"));
 });
-
 slotSelect.addEventListener("change", function () {
     const selectedOption = this.options[this.selectedIndex];
-    maxQuantity = parseInt(selectedOption.dataset.capacity);
+    maxQuantity = parseInt(selectedOption.dataset.availableCapacity);
     updateCapacityStatus();
     // Adapt the cart if the total quantity exceeds the new maxQuantity
     if (totalQuantity > maxQuantity) {
         alert(`La capacité du créneau selectionné est dépassée, veuillez ajuster votre panier ou bien sélectionner un autre créneau pour pouvoir placer votre réservation.`);
     }
 });
-
 serviceSelect.dispatchEvent(new Event("change"));
 
+// Manage former items if any
+if (formerItems) {
+    formerItems.querySelectorAll('input').forEach(input => {
+        const pizzaId = input.dataset.pizza_id;
+        const quantity = parseInt(input.dataset.quantity);
+        const name = input.dataset.name;
+        const price = parseFloat(input.dataset.price);
+        let totalToAdd = price * quantity;
+
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <input type="hidden" name="item[${pizzaId}]" value="${quantity}">
+            <td>${name}</td>
+            <td class="quantity">${quantity}</td>
+            <td class="price">${price.toFixed(2)} €</td>
+            <td class="total">${totalToAdd.toFixed(2)} €</td>
+            <td class="d-flex align-items-center gap-1">
+                <button type="button" class="btn p-0 border-0 bg-transparent btnDecrease">
+                    <i class="bi bi-dash-circle" width="32" height="32" role="img" aria-label="Bootstrap"></i>
+                </button>
+                <button type="button" class="btn p-0 border-0 bg-transparent btnIncrease">
+                    <i class="bi bi-plus-circle" width="32" height="32" role="img" aria-label="Bootstrap"></i>
+                </button>
+                <button type="button" class="btn btn-danger btn-sm btnRemove">Supprimer</button>
+            </td>
+        `;
+
+        cartBody.appendChild(row);
+
+    // Update the total and the items count
+        cartTotal.textContent = (parseFloat(cartTotal.textContent) + totalToAdd).toFixed(2);
+        nbItems++;
+        totalQuantity += quantity;
+        cartTotalQuantity.textContent = totalQuantity;
+
+        updateCapacityStatus();
+        updateCartStatus(1,row);
+
+    // Add event listener to the remove button
+        const removeButton = row.querySelector('button.btnRemove');
+        removeButton.addEventListener('click', () => removeItem(row));
+
+    // Add event listener to the increase button
+        const increaseButton = row.querySelector('button.btnIncrease');
+        increaseButton.addEventListener('click', () => increaseItem(row));
+
+    // Add event listener to the decrease button
+        const decreaseButton = row.querySelector('button.btnDecrease');
+        decreaseButton.addEventListener('click', () => decreaseItem(row));
+
+    });
+}
+
+// Manage the add button
 addButton.addEventListener('click', () => {
     const option = pizza.options[pizza.selectedIndex];
     const name = option.dataset.name;
     const price = parseFloat(option.dataset.price);
+    const id = parseInt(option.value);
     let qty = parseInt(quantity.value);
     let totalToAdd = price * qty;
     const row = document.createElement('tr');
@@ -56,7 +143,6 @@ addButton.addEventListener('click', () => {
     const rows = cartBody.querySelectorAll('tr');
     for (const existingRow of rows) {
         if (existingRow.cells[0].textContent === name) {    // Check availabilty and update qty
-            console.log("Ajout d'un item existant");
             if (totalQuantity + qty > maxQuantity) {
                 qty = maxQuantity - totalQuantity;
                 alert(`La quantité demandée dépasse la capacité disponible pour ce créneau horaire. La quantité a été ajustée à ${qty}.`);
@@ -76,6 +162,7 @@ addButton.addEventListener('click', () => {
     }
 
     row.innerHTML = `
+        <input type="hidden" name="item[${id}]" value="${qty}">
         <td>${name}</td>
         <td class="quantity">${qty}</td>
         <td class="price">${price.toFixed(2)} €</td>
@@ -93,7 +180,7 @@ addButton.addEventListener('click', () => {
 
     cartBody.appendChild(row);
 
-    // Update the total and the items count
+// Update the total and the items count
     cartTotal.textContent = (parseFloat(cartTotal.textContent) + totalToAdd).toFixed(2);
     nbItems++;
     totalQuantity += qty;
@@ -102,15 +189,15 @@ addButton.addEventListener('click', () => {
     updateCapacityStatus();
     updateCartStatus(1,row);
 
-    // Add event listener to the remove button
+// Add event listener to the remove button
     const removeButton = row.querySelector('button.btnRemove');
     removeButton.addEventListener('click', () => removeItem(row));
 
-    // Add event listener to the increase button
+// Add event listener to the increase button
     const increaseButton = row.querySelector('button.btnIncrease');
     increaseButton.addEventListener('click', () => increaseItem(row));
 
-    // Add event listener to the decrease button
+// Add event listener to the decrease button
     const decreaseButton = row.querySelector('button.btnDecrease');
     decreaseButton.addEventListener('click', () => decreaseItem(row));
 
@@ -131,6 +218,7 @@ function increaseItem(row) {
     const currentQty = parseInt(row.querySelector('.quantity').textContent);
     const newQty = currentQty + 1;
     row.querySelector('.quantity').textContent = newQty;
+    row.querySelector('input').value = newQty;
     const unitPrice = parseFloat(row.querySelector('.price').textContent);
     const newTotal = parseFloat(row.querySelector('.price').textContent) * newQty;
     row.querySelector('.total').textContent = newTotal.toFixed(2) + ' €';
@@ -146,6 +234,7 @@ function decreaseItem(row) {
     const currentQty = parseInt(row.querySelector('.quantity').textContent);
     const newQty = currentQty - 1;
     row.querySelector('.quantity').textContent = newQty;
+    row.querySelector('input').value = newQty;
     const unitPrice = parseFloat(row.querySelector('.price').textContent);
     const newTotal = parseFloat(row.querySelector('.price').textContent) * newQty;
     row.querySelector('.total').textContent = newTotal.toFixed(2) + ' €';
