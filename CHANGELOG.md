@@ -2,12 +2,20 @@
 [Lien vers le README de l'application](README.md)
 
 ## 0.3.4
-Date de la version : __/08/2026
-- Fonctionnalité réservation ( _**branch booking**_ )
-    - xxx
-<br> 
-- Fonctionnalité créneau
-    - xxx
+Date de la version : 22/08/2026
+- Version concernant la modification du CD
+    - Anciennement (au push sur branch main)
+        - Image docker arm64 via émulation QEMU sur runner GitHub
+        - push sur DockerHub
+        - pull puis up depuis VPS
+    - Désormais (au push sur branch main)
+        - Image docker arm64 via runner GitHub self-hosted sur VPS
+        - compose up depuis VPS
+        - push image arm64 sur DockerHub
+        - Image docker amd64 via runner GitHub
+        - push image amd64 sur DockerHub
+
+
 <br>
 <br>
 <br>

@@ -1,4 +1,4 @@
-name: Build and Push prod Image
+name: Build Up and Push prod Images (arm64 and amd64)
 
 on:
   push:
@@ -6,18 +6,43 @@ on:
     - main
 
 jobs:
+# 1. Build arm64 images on self-hosted runner, Deployment on VPS & push on DockerHub
+  deploy-vps:
+    runs-on: self-hosted
+    steps:
+      - name: Local build via Docker Compose
+        run: |
+          cd ~/Projets/ResaTable/ResaTble_php
+          git pull origin main
+          docker compose -f compose.prod.yml build
+          docker compose -f compose.prod.yml up -d --remove-orphans
+          docker image prune -f
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Read version
+        id: version
+        run: |
+          cd ~/Projets/ResaTable/ResaTble_php
+          echo "VERSION=$(grep -m1 '^## ' CHANGELOG.md | sed 's/^## //')" >> $GITHUB_OUTPUT
+
+      - name: Push arm64 images on DockerHub
+        run: |
+          docker tag emiliengibeaud/resa_table:latest emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}
+          docker push emiliengibeaud/resa_table:latest
+          docker push emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}
+
+# 1. Build amd64 images on GitHub runner & push on DockerHub
   build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v7
-
-    - name: Setup QEMU
-      uses: docker/setup-qemu-action@v4
-
-    - name: Setup Buildx
-      uses: docker/setup-buildx-action@v4
 
     - name: Login Docker Hub
       uses: docker/login-action@v4
@@ -29,7 +54,7 @@ jobs:
       id: version
       run: echo "VERSION=$(grep -m1 '^## ' CHANGELOG.md | sed 's/^## //')" >> $GITHUB_OUTPUT
 
-    - name: Build and Push
+    - name: Build and Push amd64 images on DockerHub
       uses: docker/build-push-action@v7
       with:
         context: .
@@ -39,24 +64,3 @@ jobs:
           emiliengibeaud/resa_table:latest
           emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}
         platforms: linux/arm64
-        # platforms: linux/amd64,linux/arm64
-
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_PRIVATE_SSH_KEY }}
-          script: |
-            cd /home/ubuntu/Projets/ResaTable/ResaTable_php
-            docker compose pull
-            docker compose up -d --remove-orphans
-            docker image prune -f

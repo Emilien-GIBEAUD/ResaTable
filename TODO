@@ -1,3 +1,11 @@
+Date de la version : __/08/2026
+- Fonctionnalité réservation ( _**branch booking**_ )
+    - xxx
+<br> 
+- Fonctionnalité créneau
+    - xxx
+
+
 /reservation
 - Ajouter de quoi éviter plusieurs réservations simultanées sur le même créneau (actuellement, vérification juste avant le flush => risque faible mais toujours possible).
 - Implémenter un système d'option pour éviter les déconvenues visiteurs en cas de réservations simultanées.

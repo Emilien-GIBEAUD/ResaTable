@@ -2,6 +2,9 @@
 # 2. Run the container with : sudo docker compose up -d
 services:
   php:
+    build:
+      context: .
+      target: frankenphp_prod
     image: emiliengibeaud/resa_table:latest
     container_name: resa_table
     restart: unless-stopped
