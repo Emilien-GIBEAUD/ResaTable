@@ -1,5 +1,3 @@
-# 1. Copy this file to the prod folder (and rename it in compose.yaml)
-# 2. Run the container with : sudo docker compose up -d
 services:
   php:
     build:
@@ -14,6 +12,8 @@ services:
       SERVER_NAME: rt.emilien-gibeaud.tech
       # Doctrine ORM → MariaDB
       DATABASE_URL: ${DATABASE_URL}
+      # In production, DATABASE_URL is provided by .env.prod.local
+      # through Docker Compose and injected into the PHP container.
 
     networks:
       - edge_edge

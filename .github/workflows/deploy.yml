@@ -7,15 +7,16 @@ on:
 
 jobs:
 # 1. Build arm64 images on self-hosted runner, Deployment on VPS & push on DockerHub
-  deploy-vps:
+  deploy-vps-arm64:
     runs-on: self-hosted
     steps:
       - name: Local build via Docker Compose
         run: |
-          cd ~/Projets/ResaTable/ResaTble_php
+          cd /home/ubuntu/Projets/ResaTable/ResaTable_php
+          git reset --hard
           git pull origin main
-          docker compose -f compose.prod.yml build
-          docker compose -f compose.prod.yml up -d --remove-orphans
+          docker compose --env-file .env.prod.local -f compose.prod.yaml build
+          docker compose --env-file .env.prod.local -f compose.prod.yaml up -d --remove-orphans
           docker image prune -f
 
       - name: Login Docker Hub
@@ -27,22 +28,26 @@ jobs:
       - name: Read version
         id: version
         run: |
-          cd ~/Projets/ResaTable/ResaTble_php
+          cd /home/ubuntu/Projets/ResaTable/ResaTable_php
           echo "VERSION=$(grep -m1 '^## ' CHANGELOG.md | sed 's/^## //')" >> $GITHUB_OUTPUT
 
       - name: Push arm64 images on DockerHub
         run: |
-          docker tag emiliengibeaud/resa_table:latest emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}
-          docker push emiliengibeaud/resa_table:latest
-          docker push emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}
+          docker tag emiliengibeaud/resa_table:latest emiliengibeaud/resa_table:arm64
+          docker tag emiliengibeaud/resa_table:latest emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-arm64
+          docker push emiliengibeaud/resa_table:arm64
+          docker push emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-arm64
 
-# 1. Build amd64 images on GitHub runner & push on DockerHub
-  build:
+# 2. Build amd64 images on GitHub runner & push on DockerHub
+  build-amd64:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v7
+
+    - name: Setup Buildx
+      uses: docker/setup-buildx-action@v4
 
     - name: Login Docker Hub
       uses: docker/login-action@v4
@@ -61,6 +66,94 @@ jobs:
         target: frankenphp_prod
         push: true
         tags: |
-          emiliengibeaud/resa_table:latest
-          emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}
-        platforms: linux/arm64
+          emiliengibeaud/resa_table:amd64
+          emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-amd64
+        platforms: linux/amd64
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+# 3. Create and push multi-architecture manifests on DockerHub
+  manifest:
+    needs:
+      - deploy-vps-arm64
+      - build-amd64
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Read version
+        id: version
+        run: echo "VERSION=$(grep -m1 '^## ' CHANGELOG.md | sed 's/^## //')" >> $GITHUB_OUTPUT
+
+      - name: Create and push manifests
+        run: |
+          docker buildx imagetools create \
+            -t emiliengibeaud/resa_table:latest \
+            emiliengibeaud/resa_table:arm64 \
+            emiliengibeaud/resa_table:amd64
+
+          docker buildx imagetools create \
+            -t emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }} \
+            emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-arm64 \
+            emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-amd64
+
+# 4. Delete intermediate tags
+  cleanup:
+    needs:
+      - manifest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read version
+        id: version
+        run: echo "VERSION=$(grep -m1 '^## ' CHANGELOG.md | sed 's/^## //')" >> $GITHUB_OUTPUT
+
+      - name: Remove intermediate tags
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_TOKEN_DELETE: ${{ secrets.DOCKER_TOKEN_DELETE }}
+          VERSION: ${{ steps.version.outputs.VERSION }}
+        run: |
+          # 1. Authentication to retrieve the JWT
+          TOKEN=$(curl -s -X POST https://hub.docker.com/v2/users/login/ \
+            -H "Content-Type: application/json" \
+            -d "{\"username\": \"$DOCKER_USERNAME\", \"password\": \"$DOCKER_TOKEN_DELETE\"}" \
+            | jq -r .token)
+
+          if [ "$TOKEN" == "null" ] || [ -z "$TOKEN" ]; then
+            echo "Authentication to Docker Hub failed."
+            exit 1
+          fi
+
+          # 2. Define the 4 tags to be removed
+          TAGS=(
+            "arm64"
+            "amd64"
+            "${VERSION}-arm64"
+            "${VERSION}-amd64"
+          )
+
+          # 3. Remove loop
+          for TAG in "${TAGS[@]}"; do
+            echo "Remove tag: $TAG..."
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+              -H "Authorization: JWT $TOKEN" \
+              https://hub.docker.com/v2/repositories/emiliengibeaud/resa_table/tags/$TAG/)
+
+            if [ "$RESPONSE" -eq 204 ] || [ "$RESPONSE" -eq 200 ]; then
+              echo "✅ Tag '$TAG' successfully removed."
+            else
+              echo "⚠️ Fail to remove tag '$TAG' (Code HTTP : $RESPONSE)."
+            fi
+          done

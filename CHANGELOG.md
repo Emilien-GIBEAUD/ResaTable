@@ -2,7 +2,7 @@
 [Lien vers le README de l'application](README.md)
 
 ## 0.3.4
-Date de la version : 22/08/2026
+Date de la version : 23/08/2026
 - Version concernant la modification du CD
     - Anciennement (au push sur branch main)
         - Image docker arm64 via émulation QEMU sur runner GitHub
