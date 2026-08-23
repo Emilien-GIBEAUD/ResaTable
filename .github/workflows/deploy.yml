@@ -105,7 +105,7 @@ jobs:
             emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-arm64 \
             emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-amd64
 
-# 4. Delete intermediate tags
+# 4. Delete intermediate tags on DockerHub
   cleanup:
     needs:
       - manifest

@@ -5,15 +5,17 @@
 Date de la version : 23/08/2026
 - Version concernant la modification du CD
     - Anciennement (au push sur branch main)
-        - Image docker arm64 via émulation QEMU sur runner GitHub
+        - Images docker arm64 via émulation QEMU sur runner GitHub
         - push sur DockerHub
         - pull puis up depuis VPS
     - Désormais (au push sur branch main)
-        - Image docker arm64 via runner GitHub self-hosted sur VPS
+        - Images docker arm64 via runner GitHub self-hosted sur VPS
         - compose up depuis VPS
         - push image arm64 sur DockerHub
-        - Image docker amd64 via runner GitHub
-        - push image amd64 sur DockerHub
+        - Images docker amd64 via runner GitHub
+        - push images amd64 sur DockerHub
+        - regroupement des images dans des manifestes multi-architecture sur DockerHub
+        - suppression des images intermédiaires sur DockerHub
 
 
 <br>
