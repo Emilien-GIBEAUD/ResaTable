@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\{PizzaService, PizzaServiceSlot, Reservation, ReservationItem, User};
 use App\Form\ReservationType;
+use App\Mailer\ReservationMailer;
 use App\Repository\{PizzaRepository,PizzaServiceRepository,ReservationRepository};
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,6 +32,7 @@ final class ReservationController extends AbstractController
             EntityManagerInterface $entityManager, 
             PizzaRepository $pizzaRepository,
             PizzaServiceRepository $pizzaServiceRepository,
+            ReservationMailer $confirmationMail,
             #[CurrentUser] ?User $user,
             ): Response
         {
@@ -188,8 +190,9 @@ final class ReservationController extends AbstractController
                 }
                 $entityManager->flush();
 
-            // Redirect the visitor to the confirmation page
+            // Send the confirmation email then redirect the visitor to the confirmation page
                 if ($user === null) {
+                    $confirmationMail->sendConfirmation($reservation);
                     $request->getSession()->set(
                         'pending_reservation_id', 
                         $reservation->getId()

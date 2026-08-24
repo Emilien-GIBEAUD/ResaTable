@@ -1,21 +1,10 @@
 # Changelog
 [Lien vers le README de l'application](README.md)
 
-## 0.3.4
-Date de la version : 23/08/2026
-- Version concernant la modification du CD
-    - Anciennement (au push sur branch main)
-        - Images docker arm64 via émulation QEMU sur runner GitHub
-        - push sur DockerHub
-        - pull puis up depuis VPS
-    - Désormais (au push sur branch main)
-        - Images docker arm64 via runner GitHub self-hosted sur VPS
-        - compose up depuis VPS
-        - push image arm64 sur DockerHub
-        - Images docker amd64 via runner GitHub
-        - push images amd64 sur DockerHub
-        - regroupement des images dans des manifestes multi-architecture sur DockerHub
-        - suppression des images intermédiaires sur DockerHub
+## 0.3.5
+Date de la version : __/08/2026
+- Fonctionnalité réservation ( _**branch mailer**_ )
+    - Mise en place de l'envoi du mail de confirmation du visiteur
 
 
 <br>
@@ -31,7 +20,6 @@ _Il arrive que les notes de versions soient modifiées après coup (en cas d'oub
 <!-- NE PAS OUBLIER le fichier "TODO" pour les autres améliorations -->
 - Fonctionnalité réservation ( _**branch booking**_ )
     - Dissocier les erreurs en dispo, panier et coordonnées.
-    - Mise en place de l'envoi du mail de confirmation du visiteur
     - /reservation/pending (pour le visiteur) à peaufiner.
     - /reservation/visitor/{accessToken} (pour le visiteur) à peaufiner.
     - /reservation/{id} (pour l'admin)
@@ -55,6 +43,23 @@ _Il arrive que les notes de versions soient modifiées après coup (en cas d'oub
 
 
 ## Versions antérieures<a id="versions"></a>
+### 0.3.4
+---
+Date de la version : 23/08/2026
+- Version concernant la modification du CD
+    - Anciennement (au push sur branch main)
+        - build images docker arm64 (arm64 et vx.x.x-arm64) via émulation QEMU sur runner GitHub
+        - push sur DockerHub
+        - pull puis up depuis VPS
+    - Désormais (au push sur branch main)
+        - build images docker arm64 (arm64 et vx.x.x-arm64) via runner GitHub self-hosted sur VPS
+        - compose up depuis VPS
+        - push images arm64 sur DockerHub
+        - build images docker amd64 (amd64 et vx.x.x-amd64) via runner GitHub
+        - push images amd64 sur DockerHub
+        - Regroupement des images (arm64, amd64) dans des manifestes multi-architecture (latest et vx.x.x) sur DockerHub
+        - Suppression des images intermédiaires (arm64, vx.x.x-arm64, amd64 et vx.x.x-am6d4) sur DockerHub
+
 ### 0.3.3
 ---
 Date de la version : 21/08/2026

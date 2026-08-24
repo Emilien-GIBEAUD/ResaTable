@@ -1,0 +1,24 @@
+Bonjour {{ reservation.firstName }},
+
+Merci de confirmer votre réservation en copiant ce lien dans votre navigateur :
+https://rt.localhost/reservation/visitor/{{ reservation.accessToken }}
+
+Rappel de votre réservation :
+  Vos coordonnées :
+    Prénom : {{ reservation.firstName }}
+    Nom : {{ reservation.lastName }}
+    Email : {{ reservation.email }}
+    Téléphone : {{ reservation.phone }}
+
+  Votre date de réservation :
+    Date du service : {{ reservation.slot.service.serviceDate|format_datetime(pattern: 'EEEE d MMMM', locale: 'fr') }}
+    Horaire : {{ reservation.slot.startTime|date('H:i') }}
+
+  Votre réservation :
+    Pizza | Qtt | Prix unit. | Total
+{% set cartTotal = 0 %}
+{% for item in reservation.reservationItems %}
+    {{ item.pizzaName }} | {{ item.quantity }} | {{ item.unitPrice }} | {{ (item.quantity * item.unitPrice)|number_format(2) }}
+{% set cartTotal = cartTotal + item.quantity * item.unitPrice %}
+{% endfor %}
+    Total : {{ cartTotal|number_format(2) }}

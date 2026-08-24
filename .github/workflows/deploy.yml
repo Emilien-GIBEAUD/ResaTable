@@ -96,14 +96,14 @@ jobs:
       - name: Create and push manifests
         run: |
           docker buildx imagetools create \
-            -t emiliengibeaud/resa_table:latest \
-            emiliengibeaud/resa_table:arm64 \
-            emiliengibeaud/resa_table:amd64
-
-          docker buildx imagetools create \
             -t emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }} \
             emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-arm64 \
             emiliengibeaud/resa_table:${{ steps.version.outputs.VERSION }}-amd64
+
+          docker buildx imagetools create \
+            -t emiliengibeaud/resa_table:latest \
+            emiliengibeaud/resa_table:arm64 \
+            emiliengibeaud/resa_table:amd64
 
 # 4. Delete intermediate tags on DockerHub
   cleanup:
