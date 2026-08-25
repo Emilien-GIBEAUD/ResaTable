@@ -1,12 +1,12 @@
 {% apply inline_css(source('@styles/email.css')) %}
     <div class="center">
         <img src="cid:logo" alt="Logo du restaurant">
-        <h1>Réservation confirmée !</h1>
+        <h1>Réservation en attente de confirmation</h1>
     </div>
-    <p>{{ reservation.firstName }},</p>
-    <p>Votre réservation est confirmée, vous pouvez la consulter en cliquant sur le bouton suivant :</p>
+    <p>Bonjour {{ reservation.firstName }},</p>
+    <p>Merci de confirmer votre réservation en cliquant sur le bouton suivant :</p>
     <div class="center">
-        <a class="btn-primary" href="https://rt.localhost/reservation/visitor/{{ reservation.accessToken }}">Consulter ma réservation</a>
+        <a class="btn-primary" href="https://rt.localhost/reservation/visitor/{{ reservation.accessToken}}">Confirmer ma réservation</a>
     </div>
     <br>
     <br>

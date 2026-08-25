@@ -32,7 +32,7 @@ final class ReservationController extends AbstractController
             EntityManagerInterface $entityManager, 
             PizzaRepository $pizzaRepository,
             PizzaServiceRepository $pizzaServiceRepository,
-            ReservationMailer $confirmationMail,
+            ReservationMailer $mail,
             #[CurrentUser] ?User $user,
             ): Response
         {
@@ -140,7 +140,9 @@ final class ReservationController extends AbstractController
                     $reservationItem->setPizzaName($pizza->getName());
                     $reservationItem->setUnitPrice($pizza->getPrice());
                     $reservationItem->setQuantity($quantity);
-                    $reservationItem->setReservation($reservation);
+                    // $reservationItem->setReservation($reservation);
+                    // Use addReservationItem() to keep both sides of the relation synchronized and avoid issues when accessing the reservation later.
+                    $reservation->addReservationItem($reservationItem);
                     $entityManager->persist($reservationItem);
                     $reservationQuantity += $quantity;
                 }
@@ -190,9 +192,9 @@ final class ReservationController extends AbstractController
                 }
                 $entityManager->flush();
 
-            // Send the confirmation email then redirect the visitor to the confirmation page
+            // Send the askConfirmation email then redirect the visitor to the confirmation page
                 if ($user === null) {
-                    $confirmationMail->sendConfirmation($reservation);
+                    $mail->sendAskingConfirmation($reservation);
                     $request->getSession()->set(
                         'pending_reservation_id', 
                         $reservation->getId()
@@ -225,8 +227,6 @@ final class ReservationController extends AbstractController
                 return $this->redirectToRoute('app_home');
             }
 
-            // dd($reservation);
-
             return $this->render('reservation/pending.html.twig', [
                 'reservation' => $reservation,
             ]);
@@ -236,7 +236,8 @@ final class ReservationController extends AbstractController
     public function visitorEdit(
         string $accessToken, 
         ReservationRepository $reservationRepository, 
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ReservationMailer $mail,
         ): Response
         {
             $reservation = $reservationRepository->findOneBy(['accessToken' => $accessToken]);
@@ -250,6 +251,7 @@ final class ReservationController extends AbstractController
                 if ($now <= $reservation->getConfirmationExpiresAt()) {
                     $reservation->setStatus('CONFIRMED');
                     $entityManager->flush();
+                    $mail->sendConfirmation($reservation);
                     return $this->render('reservation/visitorEdit.html.twig', [
                         'reservation' => $reservation,
                         'confirmedNow' => true,

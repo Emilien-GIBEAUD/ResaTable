@@ -4,7 +4,11 @@
 ## 0.3.5
 Date de la version : __/08/2026
 - Fonctionnalité réservation ( _**branch mailer**_ )
-    - Mise en place de l'envoi du mail de confirmation du visiteur
+    - Mise en place du mail de demande de confirmation de commande
+    - Mise en place du mail annonçant que la commande est confirmée
+<br>
+- Général
+    - Assets Mapper xxxxxxxxxx
 
 
 <br>

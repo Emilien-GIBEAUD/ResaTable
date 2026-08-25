@@ -16,6 +16,10 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'pizza' => [
+        'path' => './assets/pizza.js',
+        'entrypoint' => true,
+    ],
     'bootstrap' => [
         'version' => '5.3.8',
     ],
