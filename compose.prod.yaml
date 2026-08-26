@@ -9,6 +9,7 @@ services:
     environment:
       APP_ENV: prod
       APP_SECRET: ${APP_SECRET}
+      MAILER_DSN: ${MAILER_DSN}
       SERVER_NAME: rt.emilien-gibeaud.tech
       # Doctrine ORM → MariaDB
       DATABASE_URL: ${DATABASE_URL}

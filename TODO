@@ -19,20 +19,16 @@ Date de la version : __/08/2026
 /pizzas
 - Alerter sur l'impossibilité de confirmer une réservation si le mail fourni n'est pas valide.
 
+
 /pizzas/service
 - Empêcher les différentes modifications quand le service est passé (Créneau : Twig ok, voir côté controlleur)
 
 
 Assets Mapper
-- vérifier ce qui est importé sur chaque page
+- Vérifier ce qui est importé sur chaque page
 
 
 Déploiement :
-- Remplacer la CD passant par :
-    - la création de l'image docker via émulation QEMU sur GitHub Actions
-    par 
-    - la création de l'image directement sur le VPS (Runner GitHub Actions Self-hosted)
-    (voir discussion Gemini du 18/08/2026)
 
 
 Nom des classes :

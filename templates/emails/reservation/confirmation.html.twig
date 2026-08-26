@@ -1,0 +1,51 @@
+{% apply inline_css(source('@styles/email.css')) %}
+    <div class="center">
+        <img src="cid:logo" alt="Logo du restaurant">
+        <h1>Réservation confirmée !</h1>
+    </div>
+    <p>{{ reservation.firstName }},</p>
+    <p>Votre réservation est confirmée, vous pouvez la consulter en cliquant sur le bouton suivant :</p>
+    <div class="center">
+        <a class="btn-primary" href="https://rt.localhost/reservation/visitor/{{ reservation.accessToken }}">Consulter ma réservation</a>
+    </div>
+    <br>
+    <br>
+    <h2>Rappel de votre réservation</h2>
+    <h3>Vos coordonnées</h3>
+        <p>Prénom : {{ reservation.firstName }}</p>
+        <p>Nom : {{ reservation.lastName }}</p>
+        <p>Email : {{ reservation.email }}</p>
+        <p>Téléphone : {{ reservation.phone }}</p>
+    <br>
+    <h3>Votre date de réservation</h3>
+        <p>Date du service : {{reservation.slot.service.serviceDate|format_datetime(pattern: 'EEEE d MMMM',locale: 'fr') }}</p>
+        <p>Horaire : {{ reservation.slot.startTime|date('H:i') }}</p>
+    <br>
+    <h3>Votre réservation</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Pizza</th>
+                    <th>|Qtt</th>
+                    <th>|Prix unit.</th>
+                    <th>|Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set cartTotal = 0 %}
+                {% for item in reservation.reservationItems %}
+                    <tr>
+                        <td>{{ item.pizzaName }}</td>
+                        <td>|{{ item.quantity }}</td>
+                        <td>|{{ item.unitPrice }}</td>
+                        <td>|{{ (item.quantity * item.unitPrice)|number_format(2) }}</td>
+                        {% set cartTotal = cartTotal + item.quantity * item.unitPrice %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            <strong>Total : <span id="cartTotal">{{ cartTotal|number_format(2) }}</span> €</strong>
+        </div>
+    <br>
+{% endapply %}

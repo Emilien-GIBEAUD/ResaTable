@@ -8,5 +8,3 @@ import './styles/app.css';
 
 import 'bootstrap';
 import './color-modes.js';
-import './pizza.js';
-

@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ importmap(['app', 'pizza']) }}
+{% endblock %}
+
 {% block title %}Nos Pizzas{% endblock %}
 
 {% block body %}
