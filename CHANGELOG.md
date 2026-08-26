@@ -8,9 +8,7 @@ Date de la version : __/08/2026
     - Mise en place du mail annonçant que la commande est confirmée
 <br>
 - Général
-    - Assets Mapper xxxxxxxxxx
-
-
+    - Assets Mapper : Chargement de pizza.js uniquement sur /pizza
 <br>
 <br>
 <br>
