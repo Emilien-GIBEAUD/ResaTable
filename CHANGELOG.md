@@ -11,7 +11,7 @@ Date de la version : __/08/2026
     - Assets Mapper : Chargement de pizza.js uniquement sur /pizza
 <br>
 <br>
-<br>
+<br> 
 
 _Il arrive que les notes de versions soient modifiées après coup (en cas d'oubli... , ou d'amélioration de la rédaction). Privilégier la lecture du commit le plus récent, y compris sur une branche autre que la branche "main"._  
 
