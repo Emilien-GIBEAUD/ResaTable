@@ -11,6 +11,7 @@ services:
       APP_SECRET: ${APP_SECRET}
       MAILER_DSN: ${MAILER_DSN}
       SERVER_NAME: rt.emilien-gibeaud.tech
+      APP_BASE_URL: ${APP_BASE_URL}
       # Doctrine ORM → MariaDB
       DATABASE_URL: ${DATABASE_URL}
       # In production, DATABASE_URL is provided by .env.prod.local
