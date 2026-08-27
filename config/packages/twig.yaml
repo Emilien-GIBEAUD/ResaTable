@@ -2,6 +2,8 @@ twig:
     file_name_pattern: '*.twig'
     paths:
         '%kernel.project_dir%/assets/styles': styles
+    globals:
+        app_base_url: '%env(APP_BASE_URL)%'
 
 when@test:
     twig:
