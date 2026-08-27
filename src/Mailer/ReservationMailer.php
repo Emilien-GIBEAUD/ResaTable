@@ -18,7 +18,7 @@ final class ReservationMailer
     public function sendAskingConfirmation(Reservation $reservation):void
     {
         $email = (new TemplatedEmail())
-            ->from(new Address('mail@restaurant.fr', 'Restaurant Bidule'))
+            ->from(new Address('test.resatable@gmail.com', 'test resatable'))
             ->to(new Address($reservation->getEmail(), $reservation->getFirstname() . ' ' . $reservation->getLastName()))
             ->subject('Réservation du ' . $reservation->getSlot()->getService()->getServiceDate()->format('d/m/Y') . ' (attente confirmation)')
             ->htmlTemplate('emails/reservation/askConfirmation.html.twig')
@@ -38,7 +38,7 @@ final class ReservationMailer
     public function sendConfirmation(Reservation $reservation):void
     {
         $email = (new TemplatedEmail())
-            ->from(new Address('mail@restaurant.fr', 'Restaurant Bidule'))
+            ->from(new Address('test.resatable@gmail.com', 'test resatable'))
             ->to(new Address($reservation->getEmail(), $reservation->getFirstname() . ' ' . $reservation->getLastName()))
             ->subject('Réservation du ' . $reservation->getSlot()->getService()->getServiceDate()->format('d/m/Y') . ' (confirmée)')
             ->htmlTemplate('emails/reservation/confirmation.html.twig')
