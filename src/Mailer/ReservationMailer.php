@@ -26,7 +26,7 @@ final class ReservationMailer
             ->addPart(
                 (new DataPart(
                     new File('/app/public/images/logo_mail.png'), 
-                    'logo',
+                    'logo.png',
                     'image/png'
                 ))->asInline())
             ->context([
@@ -46,7 +46,7 @@ final class ReservationMailer
             ->addPart(
                 (new DataPart(
                     new File('/app/public/images/logo_mail.png'), 
-                    'logo',
+                    'logo.png',
                     'image/png'
                 ))->asInline())
             ->context([
