@@ -25,7 +25,7 @@ final class ReservationMailer
             ->textTemplate('emails/reservation/askConfirmation.txt.twig') 
             ->addPart(
                 (new DataPart(
-                    new File('/app/public/assets/img/logo_mail.png'), 
+                    new File('/app/public/images/logo_mail.png'), 
                     'logo',
                     'image/png'
                 ))->asInline())
@@ -45,7 +45,7 @@ final class ReservationMailer
             ->textTemplate('emails/reservation/confirmation.txt.twig') 
             ->addPart(
                 (new DataPart(
-                    new File('/app/public/assets/img/logo_mail.png'), 
+                    new File('/app/public/images/logo_mail.png'), 
                     'logo',
                     'image/png'
                 ))->asInline())
