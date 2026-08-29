@@ -1,14 +1,10 @@
 # Changelog
 [Lien vers le README de l'application](README.md)
 
-## 0.3.5
-Date de la version : 27/08/2026
-- Fonctionnalité réservation ( _**branch mailer**_ )
-    - Mise en place du mail de demande de confirmation de commande
-    - Mise en place du mail annonçant que la commande est confirmée
-<br>
-- Général
-    - Assets Mapper : Chargement de pizza.js uniquement sur /pizza
+## 0.3.6
+Date de la version : 29/08/2026
+- Changement du nom de domaine (rt.emilien-gibeaud.tech vers rt.petitmaraichin.fr)
+    - Possible à l'avenir sans nouvelle version
 <br>
 <br>
 <br>
@@ -45,6 +41,16 @@ _Il arrive que les notes de versions soient modifiées après coup (en cas d'oub
 
 
 ## Versions antérieures<a id="versions"></a>
+### 0.3.5
+---
+Date de la version : 27/08/2026
+- Fonctionnalité réservation ( _**branch mailer**_ )
+    - Mise en place du mail de demande de confirmation de commande
+    - Mise en place du mail annonçant que la commande est confirmée
+<br>
+- Général
+    - Assets Mapper : Chargement de pizza.js uniquement sur /pizza
+
 ### 0.3.4
 ---
 Date de la version : 23/08/2026
